@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require("cors");
 const mongoose = require('mongoose');
+const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
@@ -10,14 +11,13 @@ const MONGODB_URI = process.env.MONGODB_URI;
 const app = express();
 
 const corsOptions = {
-  origin: 'https://matsvei-app.netlify.app',
+  origin: process.env.REACT_APP_FRONTEND_URL || 'http://localhost:3000',
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(cors());
 
 async function connectDB() {
   try {
@@ -51,17 +51,16 @@ const eventSchema = new mongoose.Schema({
       id: String,
       time: String,
       text: String,
-      
     }
   ]
-})
+});
 
 const Todo = mongoose.model("Todo", todoSchema);
-const Event = mongoose.model("Event", eventSchema)
+const Event = mongoose.model("Event", eventSchema);
 
 app.get('/api/todo', async (req, res) => {
   try {
-    const data = await Todo.find(); 
+    const data = await Todo.find();
     res.json(data);
   } catch (err) {
     console.error(err);
@@ -79,11 +78,10 @@ app.get('/api/events', async (req, res) => {
   }
 });
 
-
 app.post("/", async (req, res) => {
   try {
     const { formattedDate, filteredTodos } = req.body;
-    console.log(filteredTodos)
+    console.log(filteredTodos);
 
     const [day, month, year] = formattedDate.split('/');
     const dateFormattedForMongo = `${day}-${month}-${year}`;
@@ -127,7 +125,7 @@ app.post("/event", async (req, res) => {
     const dateFormattedForMongo = `${day}-${month}-${year}`;
 
     const existingEvent = await Event.findOne({ date: dateFormattedForMongo });
-    console.log(events, dateFormattedForMongo)
+    console.log(events, dateFormattedForMongo);
 
     if (existingEvent) {
       existingEvent.events = events.map(event => ({
@@ -167,5 +165,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log("Server is running on port 5000");
+  console.log(`Server is running on port ${PORT}`);
 });

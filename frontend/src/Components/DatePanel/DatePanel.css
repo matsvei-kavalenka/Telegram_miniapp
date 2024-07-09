@@ -1,0 +1,32 @@
+.date-main-div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    left: 5px; 
+    right: 5px; 
+    width: calc(100%-10px);
+    height: 60px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.date-input-container {
+    flex-shrink: 0;
+  }
+  
+
+.day-h1{
+    flex-grow: 1;
+    font-size: 24px;
+}
+
+.date-input-container{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

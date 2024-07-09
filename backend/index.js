@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require("cors");
+const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -10,11 +10,14 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 const app = express();
 
-const corsOptions = {
+
+
+app.use(express.json());
+app.use(cors({
   origin: process.env.REACT_APP_FRONTEND_URL || 'http://localhost:3000',
   optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+}));
+
 
 app.use(bodyParser.json());
 app.use(express.json());

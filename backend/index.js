@@ -7,18 +7,20 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
-const FRONTEND_URL = process.env.FRONTEND_URL
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 const app = express();
 
-
-
 app.use(express.json());
-app.use(cors({
-  origin: FRONTEND_URL,
-  optionsSuccessStatus: 200
-}));
 
+
+const corsOptions = {
+  origin: FRONTEND_URL, 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(express.json());

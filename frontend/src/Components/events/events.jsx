@@ -61,7 +61,7 @@ function Events() {
     const formattedDate = formatDate(selectedDate);
 
     try {
-      const response = await fetch('http://localhost:5000/event', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/event`, {
         method: "POST",
         body: JSON.stringify({ formattedDate, events }),
         headers: {

@@ -9,6 +9,12 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 const app = express();
 
+const corsOptions = {
+  origin: 'https://matsvei-app.netlify.app',
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
@@ -150,6 +156,14 @@ app.post("/event", async (req, res) => {
     console.error(e);
     res.status(500).send("Something Went Wrong");
   }
+});
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+// The "catchall" handler: for any request that doesn't match one above, send back index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
 });
 
 app.listen(PORT, () => {

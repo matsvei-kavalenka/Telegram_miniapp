@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
+const FRONTEND_URL = process.env.FRONTEND_URL
 
 const app = express();
 
@@ -14,7 +15,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: process.env.REACT_APP_FRONTEND_URL || 'http://localhost:3000',
+  origin: FRONTEND_URL,
   optionsSuccessStatus: 200
 }));
 

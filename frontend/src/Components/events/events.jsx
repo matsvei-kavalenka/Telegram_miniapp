@@ -147,8 +147,8 @@ function Events({ userId }) {
     const updatedEvents = events.map((field) =>
       field.id === id ? { ...field, disabled: false } : field
     );
-    console.log(updatedEvents)
     setEvents(updatedEvents);
+    handleOnSubmit(updatedEvents);
   };
 
   const handleSaveField = (id) => {
@@ -162,6 +162,13 @@ function Events({ userId }) {
     const updatedEvents = events.filter((field) => field.id !== id);
     setEvents(updatedEvents);
     handleOnSubmit(updatedEvents);
+  };
+
+  const handleChange = (id, value) => {
+    const updatedEvents = events.map((field) =>
+      field.id === id ? { ...field, timeValue: value } : field
+    );
+    setEvents(updatedEvents);
   };
 
   return (
@@ -198,6 +205,7 @@ function Events({ userId }) {
                 onEdit={handleEditMode}
                 onSave={handleSaveField}
                 timeValue={moment(field.time)}
+                onTimeChange={handleChange}
                 disabled={field.disabled === undefined || field.disabled === null ? true : field.disabled}
               />
             ))}

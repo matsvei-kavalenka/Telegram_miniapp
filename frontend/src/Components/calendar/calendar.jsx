@@ -8,7 +8,7 @@ import moment from 'moment';
 import Button from '../Button/Button';
 import { useNavigate } from 'react-router-dom';
 
-function MainCalendar() {
+function MainCalendar({userId}) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [todosCalendar, setTodosCalendar] = useState([]);
   const [eventsCalendar, setEventsCalendar] = useState([]);

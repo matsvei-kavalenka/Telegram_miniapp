@@ -13,7 +13,6 @@ const app = express();
 
 app.use(express.json());
 
-
 const corsOptions = {
   origin: FRONTEND_URL, 
   methods: ['GET', 'POST', 'PUT', 'DELETE'], 
@@ -21,13 +20,11 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
 app.use(bodyParser.json());
-app.use(express.json());
 
 async function connectDB() {
   try {
-    await mongoose.connect(`${MONGODB_URI}`, {
+    await mongoose.connect(MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
@@ -39,7 +36,10 @@ async function connectDB() {
 
 connectDB();
 
+
+
 const todoSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
   date: String,
   todos: [
     {
@@ -51,6 +51,7 @@ const todoSchema = new mongoose.Schema({
 });
 
 const eventSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
   date: String,
   events: [
     {
@@ -65,8 +66,9 @@ const Todo = mongoose.model("Todo", todoSchema);
 const Event = mongoose.model("Event", eventSchema);
 
 app.get('/api/todo', async (req, res) => {
+  const userId = req.query.userId;
   try {
-    const data = await Todo.find();
+    const data = await Todo.find({ userId: userId });
     res.json(data);
   } catch (err) {
     console.error(err);
@@ -75,8 +77,9 @@ app.get('/api/todo', async (req, res) => {
 });
 
 app.get('/api/events', async (req, res) => {
+  const userId = req.query.userId;
   try {
-    const data = await Event.find();
+    const data = await Event.find({ userId: userId });
     res.json(data);
   } catch (err) {
     console.error(err);
@@ -86,13 +89,11 @@ app.get('/api/events', async (req, res) => {
 
 app.post("/", async (req, res) => {
   try {
-    const { formattedDate, filteredTodos } = req.body;
-    console.log(filteredTodos);
-
+    const { userId, formattedDate, filteredTodos } = req.body;
     const [day, month, year] = formattedDate.split('/');
     const dateFormattedForMongo = `${day}-${month}-${year}`;
 
-    const existingTodo = await Todo.findOne({ date: dateFormattedForMongo });
+    const existingTodo = await Todo.findOne({ userId, date: dateFormattedForMongo });
 
     if (existingTodo) {
       existingTodo.todos = filteredTodos.map(todo => ({
@@ -102,9 +103,9 @@ app.post("/", async (req, res) => {
       }));
       const updatedTodo = await existingTodo.save();
       res.json(updatedTodo.toObject());
-      console.log('Todo updated:', updatedTodo);
     } else {
       const newTodo = new Todo({
+        userId,
         date: dateFormattedForMongo,
         todos: filteredTodos.map(todo => ({
           id: todo.id,
@@ -115,7 +116,6 @@ app.post("/", async (req, res) => {
 
       const savedTodo = await newTodo.save();
       res.json(savedTodo.toObject());
-      console.log('New todo created:', savedTodo);
     }
   } catch (e) {
     console.error(e);
@@ -125,13 +125,11 @@ app.post("/", async (req, res) => {
 
 app.post("/event", async (req, res) => {
   try {
-    const { formattedDate, events } = req.body;
-
+    const { userId, formattedDate, events } = req.body;
     const [day, month, year] = formattedDate.split('/');
     const dateFormattedForMongo = `${day}-${month}-${year}`;
 
-    const existingEvent = await Event.findOne({ date: dateFormattedForMongo });
-    console.log(events, dateFormattedForMongo);
+    const existingEvent = await Event.findOne({ userId, date: dateFormattedForMongo });
 
     if (existingEvent) {
       existingEvent.events = events.map(event => ({
@@ -141,9 +139,9 @@ app.post("/event", async (req, res) => {
       }));
       const updatedEvent = await existingEvent.save();
       res.json(updatedEvent.toObject());
-      console.log('Event updated:', updatedEvent);
     } else {
       const newEvent = new Event({
+        userId: userId,
         date: dateFormattedForMongo,
         events: events.map(event => ({
           id: event.id,
@@ -154,7 +152,6 @@ app.post("/event", async (req, res) => {
 
       const savedEvent = await newEvent.save();
       res.json(savedEvent.toObject());
-      console.log('New event created:', savedEvent);
     }
   } catch (e) {
     console.error(e);
@@ -162,10 +159,8 @@ app.post("/event", async (req, res) => {
   }
 });
 
-// Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-// The "catchall" handler: for any request that doesn't match one above, send back index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
 });

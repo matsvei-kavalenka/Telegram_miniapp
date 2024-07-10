@@ -10,8 +10,8 @@ import { useNavigate } from 'react-router-dom';
 
 function MainCalendar() {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [todos, setTodos] = useState([]);
-  const [events, setEvents] = useState([]);
+  const [todosCalendar, setTodosCalendar] = useState([]);
+  const [eventsCalendar, setEventsCalendar] = useState([]);
   const eventsRef = useRef();
   const navigate = useNavigate();
 
@@ -30,16 +30,16 @@ function MainCalendar() {
 
           if (date < today) {
             const filteredTodos = foundData.todos.filter((todo) => todo.checked);
-            setTodos(filteredTodos);
+            setTodosCalendar(filteredTodos);
           } else {
-            setTodos(foundData.todos);
+            setTodosCalendar(foundData.todos);
           }
         } else {
-          setTodos([]);
+          setTodosCalendar([]);
         }
       } catch (error) {
         console.error('Error fetching todos:', error);
-        setTodos([]);
+        setTodosCalendar([]);
       }
     };
 
@@ -49,13 +49,13 @@ function MainCalendar() {
         const formattedDate = formatDateForMongo(date);
         const foundData = response.data.find((block) => block.date === formattedDate);
         if (foundData) {
-          setEvents(foundData.events);
+          setEventsCalendar(foundData.events);
         } else {
-          setEvents([]);
+          setEventsCalendar([]);
         }
       } catch (error) {
         console.error('Error fetching events:', error);
-        setEvents([]);
+        setEventsCalendar([]);
       }
     };
 
@@ -98,7 +98,7 @@ function MainCalendar() {
       <div className='scrollable-calendar-div'>
         <div className='calendar-events-div' ref={eventsRef}>
           <h2>Todos</h2>
-          {todos
+          {todosCalendar
             .sort((a, b) => (a.checked === b.checked ? 0 : a.checked ? 1 : -1))
             .map((todo, index) => (
               <TodoField
@@ -109,12 +109,12 @@ function MainCalendar() {
                 disableAll={true}
               />
             ))}
-          {todos.length === 0 && selectedDate >= new Date() && (
+          {todosCalendar.length === 0 && selectedDate >= new Date() && (
             <Button type='goTo' text='Add a todo' onClick={handleGoToTodo} />
           )}
-          {todos.length === 0 && selectedDate <= new Date() && <h3>Empty</h3>}
+          {todosCalendar.length === 0 && selectedDate <= new Date() && <h3>Empty</h3>}
           <h2>Events</h2>
-          {events
+          {eventsCalendar
             .sort((a, b) => moment(a.time).valueOf() - moment(b.time).valueOf())
             .map((field) => (
               <EventField
@@ -124,14 +124,12 @@ function MainCalendar() {
                 onChangeInput={handleChangeInput}
                 onDelete={() => handleDelete(field.id)}
                 onSave={() => handleSave(field.id)}
-                editModeState={false}
                 timeValue={moment(field.time)}
                 disabled={true}
-                disabledAll={true}
                 navigate={handleGoToEvents}
               />
             ))}
-          {events.length === 0 && (
+          {eventsCalendar.length === 0 && (
             <Button type='goTo' text='Add an event' onClick={handleGoToEvents} />
           )}
         </div>

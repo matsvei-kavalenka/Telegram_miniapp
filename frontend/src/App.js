@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { useEffect } from 'react';
 
 const tg = window.Telegram.WebApp;
+const userId = tg.initDataUnsafe?.user?.id;
 
 function App() {
   useEffect(() => {
@@ -28,7 +29,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <AppRoutes/>
+      <AppRoutes userId={userId} />
     </BrowserRouter>
   );
 }

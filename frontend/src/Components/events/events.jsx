@@ -148,7 +148,6 @@ function Events({ userId }) {
       field.id === id ? { ...field, disabled: false } : field
     );
     setEvents(updatedEvents);
-    handleOnSubmit(updatedEvents);
   };
 
   const handleSaveField = (id) => {
@@ -156,6 +155,7 @@ function Events({ userId }) {
       field.id === id ? { ...field, disabled: true } : field
     );
     setEvents(updatedEvents);
+    handleOnSubmit(updatedEvents);
   };
 
   const handleDeleteField = (id) => {
@@ -166,7 +166,7 @@ function Events({ userId }) {
 
   const handleChange = (id, value) => {
     const updatedEvents = events.map((field) =>
-      field.id === id ? { ...field, timeValue: value } : field
+      field.id === id ? { ...field, time: value } : field
     );
     setEvents(updatedEvents);
   };

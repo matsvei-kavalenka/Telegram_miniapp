@@ -18,7 +18,9 @@ function MainCalendar() {
   useEffect(() => {
     const getTodos = async (date) => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/todo`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/todo`, {
+          params: { userId }
+        });
         const formattedDate = formatDateForMongo(date);
         const foundData = response.data.find((block) => block.date === formattedDate);
 
@@ -45,7 +47,9 @@ function MainCalendar() {
 
     const getEvents = async (date) => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/events`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/events`, {
+          params: { userId }
+        });
         const formattedDate = formatDateForMongo(date);
         const foundData = response.data.find((block) => block.date === formattedDate);
         if (foundData) {

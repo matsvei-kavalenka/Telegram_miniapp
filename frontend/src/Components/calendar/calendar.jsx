@@ -65,7 +65,7 @@ function MainCalendar({userId}) {
 
     getTodos(selectedDate);
     getEvents(selectedDate);
-  }, [selectedDate]);
+  }, [selectedDate, userId]);
 
   const handleCalendarClick = (date) => {
     eventsRef.current?.scrollIntoView({ behavior: 'smooth' });

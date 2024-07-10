@@ -11,9 +11,14 @@ function EventField({ id, text, onChangeInput, onDelete, onEdit, onSave, timeVal
     onChangeInput(id, e.target.value);
   };
 
+  const handleTimeChange = (value) => {
+    console.log(id,value)
+    onTimeChange(id, value);
+  };
+
   return (
     <div className="form-row-event">
-      <CustomTimePicker id={`time-${id}`} disabled={disabled} value={timeValue} onChange={() => onTimeChange(id)}  />
+      <CustomTimePicker id={`event-${id}`} disabled={disabled} value={timeValue} onChange={handleTimeChange} />
       <input
         id={`event-${id}`}
         type="text"
@@ -29,7 +34,7 @@ function EventField({ id, text, onChangeInput, onDelete, onEdit, onSave, timeVal
         <Button type="save" onClick={() => onSave(id)} text='Save' alt="Save" />
       ) : (
         <div>
-          <Button type="edit" onClick={() => navigate ? navigate() : onEdit(id)} img={editIcon} alt="Edit"  />
+          <Button type="edit" onClick={() => navigate ? navigate() : onEdit(id)} img={editIcon} alt="Edit" />
           <Button type="delete" onClick={() => onDelete(id)} img={deleteIcon} alt="Delete" disabled={deleteDisabled} />
         </div>
       )}
@@ -48,6 +53,7 @@ EventField.propTypes = {
   disabled: PropTypes.bool,
   navigate: PropTypes.func,
   deleteDisabled: PropTypes.bool,
+  onTimeChange: PropTypes.func,
 };
 
 export default EventField;

@@ -8,7 +8,7 @@ import EventField from '../eventField/eventField';
 import moment from 'moment';
 import axios from "axios";
 
-function Events() {
+function Events({ userId }) {
   const location = useLocation();
   const { dateCalendar } = location.state || {};
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -26,7 +26,9 @@ function Events() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/events`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/events`, {
+          params: { userId }
+        });
         setData(response.data);
         retrieveEvents(response.data);
       } catch (error) {
@@ -35,7 +37,8 @@ function Events() {
     };
 
     fetchData();
-  });
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     const formattedDate = formatDateForMongo(selectedDate);
@@ -49,7 +52,7 @@ function Events() {
 
   const handleAddField = () => {
     if (inputValue.trim() === '') return;
-    const newEvent = { id: Math.random().toString(16).slice(2), text: inputValue, time: timeValue, editModeState: false, disabled: true };
+    const newEvent = { id: Math.random().toString(16).slice(2), text: inputValue, time: timeValue, disabled: true };
     const updatedEvents = [...events, newEvent];
     setEvents(updatedEvents);
     setInputValue('');
@@ -59,11 +62,11 @@ function Events() {
 
   const handleOnSubmit = async (events) => {
     const formattedDate = formatDate(selectedDate);
-
+    console.log(userId)
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/event`, {
         method: "POST",
-        body: JSON.stringify({ formattedDate, events }),
+        body: JSON.stringify({ userId, formattedDate, events }),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -143,14 +146,15 @@ function Events() {
 
   const handleEditMode = (id) => {
     const updatedEvents = events.map((field) =>
-      field.id === id ? { ...field, editModeState: true, disabled: false } : field
+      field.id === id ? { ...field, disabled: false } : field
     );
+    console.log(updatedEvents)
     setEvents(updatedEvents);
   };
 
   const handleSaveField = (id) => {
     const updatedEvents = events.map((field) =>
-      field.id === id ? { ...field, editModeState: false, disabled: true } : field
+      field.id === id ? { ...field, disabled: true } : field
     );
     setEvents(updatedEvents);
   };
@@ -193,11 +197,9 @@ function Events() {
                 onChangeInput={handleChangeInput}
                 onDelete={handleDeleteField}
                 onEdit={handleEditMode}
-                editModeState={field.editModeState}
                 onSave={handleSaveField}
                 timeValue={moment(field.time)}
                 disabled={field.disabled === undefined || field.disabled === null ? true : field.disabled}
-                disabledAll={false}
               />
             ))}
         </div>

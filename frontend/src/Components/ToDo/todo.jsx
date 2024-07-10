@@ -8,7 +8,7 @@ import axios from 'axios';
 import DatePanel from '../DatePanel/DatePanel';
 import OutsideClicker from '../OutsideClick/OutsideClick';
 
-function Todo() {
+function Todo({ userId }) {
   const location = useLocation();
   const { dateCalendar } = location.state || {};
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -130,7 +130,7 @@ function Todo() {
     const filteredTodos = todos.filter(x => x.text.length !== 0);
     
     try {
-      const response = await fetch(`process.env.REACT_APP_API_URL`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}`, {
         method: 'POST',
         body: JSON.stringify({ formattedDate, filteredTodos }),
         headers: {

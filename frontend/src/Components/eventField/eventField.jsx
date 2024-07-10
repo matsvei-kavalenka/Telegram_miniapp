@@ -6,16 +6,14 @@ import deleteIcon from '../../img/deleteIcon.png';
 import editIcon from '../../img/editIcon.png'
 import Button from '../Button/Button';
 
-function EventField({ id, text, onChangeInput, onDelete, onEdit, editModeState, onSave, timeValue, disabled, disabledAll, navigate }) {
+function EventField({ id, text, onChangeInput, onDelete, onEdit, onSave, timeValue, disabled, navigate }) {
   const handleInputChange = (e) => {
-    if (!disabledAll) {
-      onChangeInput(id, e.target.value);
-    }
+    onChangeInput(id, e.target.value);
   };
 
   return (
     <div className="form-row-event">
-      <CustomTimePicker disabled={disabled || disabledAll} value={timeValue} />
+      <CustomTimePicker disabled={disabled} value={timeValue} />
       <input
         id={`event-${id}`}
         type="text"
@@ -23,17 +21,16 @@ function EventField({ id, text, onChangeInput, onDelete, onEdit, editModeState, 
         name='eventField'
         value={text}
         onChange={handleInputChange}
-        readOnly={!editModeState}
+        readOnly={disabled}
         autoComplete="off"
-        disabled={disabledAll}
       />
 
-      {editModeState ? (
-        <Button type="save" onClick={() => !disabledAll && onSave(id)} text='Save' alt="Save" disabled={disabledAll} />
+      {!disabled ? (
+        <Button type="save" onClick={() => onSave(id)} text='Save' alt="Save" />
       ) : (
         <div>
-          <Button type="edit" onClick={() => !disabledAll ? onEdit(id) : navigate()} img={editIcon} alt="Edit"  />
-          <Button type="delete" onClick={() => !disabledAll && onDelete(id)} img={deleteIcon} alt="Delete" disabled={disabledAll} />
+          <Button type="edit" onClick={() => navigate ? navigate() : onEdit(id)} img={editIcon} alt="Edit"  />
+          <Button type="delete" onClick={() => onDelete(id)} img={deleteIcon} alt="Delete" disabled={disabled} />
         </div>
       )}
     </div>
@@ -43,14 +40,12 @@ function EventField({ id, text, onChangeInput, onDelete, onEdit, editModeState, 
 EventField.propTypes = {
   id: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
+  timeValue: PropTypes.object.isRequired,
   onChangeInput: PropTypes.func,
   onDelete: PropTypes.func,
   onEdit: PropTypes.func,
   onSave: PropTypes.func,
-  editModeState: PropTypes.bool,
-  timeValue: PropTypes.object,
   disabled: PropTypes.bool,
-  disabledAll: PropTypes.bool,
 };
 
 export default EventField;

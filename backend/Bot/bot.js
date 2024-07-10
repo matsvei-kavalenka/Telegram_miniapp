@@ -1,21 +1,41 @@
-const { Telegraf } = require("telegraf");
-const TOKEN = "7457579694:AAFhRclqf7Td0Qr6Lvped6t8qNWMrrzSuvU";
-const bot = new Telegraf(TOKEN);
-const web_link = "https://fec3-213-197-171-233.ngrok-free.app";
-const mongoose = require("mongoose");
+const TelegramBot = require('node-telegram-bot-api');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-mongoose.connect("mongodb://localhost/database-db");
+const token = process.env.TELEGRAM_BOT_TOKEN;
+const bot = new TelegramBot(token, { polling: true });
 
+const MONGODB_URI = process.env.MONGODB_URI;
 
-bot.start((ctx) =>
-  ctx.reply(web_link, {
-    reply_markup: {
-      keyboard: [[{ text: "web app", web_app: { url: web_link } }]],
-    },
-  })
-);
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch(err => {
+  console.error('Error connecting to MongoDB', err);
+});
 
+const userSchema = new mongoose.Schema({
+  telegramId: { type: String, required: true, unique: true },
+});
 
-bot.launch()
+const User = mongoose.model('User', userSchema);
 
+bot.onText(/\/start/, async (msg) => {
+  const chatId = msg.chat.id;
 
+  try {
+    const user = new User({ telegramId: chatId.toString() });
+    await user.save();
+    console.log(chatId.toString())
+    bot.sendMessage(chatId, 'Welcome! Your Telegram ID has been saved.');
+  } catch (err) {
+    if (err.code === 11000) {
+      bot.sendMessage(chatId, 'Welcome back! Your Telegram ID is already saved.');
+    } else {
+      bot.sendMessage(chatId, 'An error occurred while saving your Telegram ID.');
+      console.error(err);
+    }
+  }
+});

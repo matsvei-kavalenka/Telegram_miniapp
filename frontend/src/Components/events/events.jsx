@@ -62,7 +62,6 @@ function Events({ userId }) {
 
   const handleOnSubmit = async (events) => {
     const formattedDate = formatDate(selectedDate);
-    console.log(userId)
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/event`, {
         method: "POST",

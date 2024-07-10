@@ -36,7 +36,9 @@ function Todo({ userId }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/todo`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/todo`, {
+          params: { userId }
+        });
         setData(response.data);
         retrieveTodos(response.data);
       } catch (error) {
@@ -132,7 +134,7 @@ function Todo({ userId }) {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}`, {
         method: 'POST',
-        body: JSON.stringify({ formattedDate, filteredTodos }),
+        body: JSON.stringify({  userId, formattedDate, filteredTodos }),
         headers: {
           'Content-Type': 'application/json',
         },

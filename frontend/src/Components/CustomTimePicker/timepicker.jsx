@@ -4,9 +4,10 @@ import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
 import moment from 'moment';
 
-function CustomTimePicker({ value, onChange, disabled}) {
+function CustomTimePicker({id, value, onChange, disabled}) {
   return (     
     <TimePicker
+        id={id}
         className='timepicker'
         format="HH:mm"
         showSecond={false}

@@ -131,6 +131,7 @@ function MainCalendar({userId}) {
                 timeValue={moment(field.time)}
                 disabled={true}
                 navigate={handleGoToEvents}
+                deleteDisabled={true}
               />
             ))}
           {eventsCalendar.length === 0 && (

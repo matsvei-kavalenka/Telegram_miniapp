@@ -7,9 +7,11 @@ import DatePanel from '../DatePanel/DatePanel';
 import EventField from '../eventField/eventField';
 import moment from 'moment';
 import axios from "axios";
+import CryptoJS, { AES } from 'crypto-js';
 
 function Events({ userId }) {
   const location = useLocation();
+  const secretKey = process.env.REACT_APP_SECRET_KEY;
   const { dateCalendar } = location.state || {};
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [data, setData] = useState([]);
@@ -50,6 +52,15 @@ function Events({ userId }) {
     }
   }, [selectedDate, data]);
 
+  const encryptData = (data) => {
+    return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+  };
+
+  const decryptData = (encryptedData) => {
+    const decryptedData = AES.decrypt(encryptedData, secretKey).toString(CryptoJS.enc.Utf8);
+    return JSON.parse(decryptedData);
+  };
+
   const handleAddField = () => {
     if (inputValue.trim() === '') return;
     const newEvent = { id: Math.random().toString(16).slice(2), text: inputValue, time: timeValue, disabled: true };
@@ -62,10 +73,11 @@ function Events({ userId }) {
 
   const handleOnSubmit = async (events) => {
     const formattedDate = formatDate(selectedDate);
+    const encryptedEvents = encryptData(events);  
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/event`, {
         method: "POST",
-        body: JSON.stringify({ userId, formattedDate, events }),
+        body: JSON.stringify({ userId, formattedDate, encryptedEvents }),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -121,7 +133,8 @@ function Events({ userId }) {
     const formattedDate = formatDateForMongo(selectedDate);
     const foundData = data.find(block => block.date === formattedDate);
     if (foundData) {
-      setEvents(foundData.events);
+      const decryptedEvents = decryptData(foundData.events);
+      setEvents(decryptedEvents);
     } else {
       setEvents([]);
     }

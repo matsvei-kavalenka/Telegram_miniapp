@@ -7,9 +7,11 @@ import TodoField from '../todoField/todoField';
 import axios from 'axios';
 import DatePanel from '../DatePanel/DatePanel';
 import OutsideClicker from '../OutsideClick/OutsideClick';
+import CryptoJS, { AES } from 'crypto-js';
 
 function Todo({ userId }) {
   const location = useLocation();
+  const secretKey = process.env.REACT_APP_SECRET_KEY;
   const { dateCalendar } = location.state || {};
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [todos, setTodos] = useState([]);
@@ -59,8 +61,16 @@ function Todo({ userId }) {
       setBtnStateDisabled(false);
     }
   }, [selectedDate]);
-  
 
+  const encryptData = (data) => {
+    return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+  };
+
+  const decryptData = (encryptedData) => {
+    const decryptedData = AES.decrypt(encryptedData, secretKey).toString(CryptoJS.enc.Utf8);
+    return JSON.parse(decryptedData);
+  };
+  
   const handleKeyDown = (event, id) => {
     if (event.key === 'Enter') {
       const inputElement = document.getElementById(`text-${id}`);
@@ -130,11 +140,12 @@ function Todo({ userId }) {
       return;
     }
     const filteredTodos = todos.filter(x => x.text.length !== 0);
+    const encryptedTodos = encryptData({ userId, formattedDate, filteredTodos });
     
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}`, {
         method: 'POST',
-        body: JSON.stringify({  userId, formattedDate, filteredTodos }),
+        body: JSON.stringify({  userId, formattedDate, encryptedTodos }),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -158,7 +169,8 @@ function Todo({ userId }) {
     const formattedDate = formatDateForMongo(selectedDate);
     const foundData = data.find((block) => block.date === formattedDate);
     if (foundData) {
-      setTodos(foundData.todos);
+      const decryptedData = decryptData(foundData.todos);
+      setTodos(decryptedData);
     }
   };
 

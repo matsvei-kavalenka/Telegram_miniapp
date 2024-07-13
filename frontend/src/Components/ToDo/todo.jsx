@@ -165,12 +165,14 @@ function Todo({ userId }) {
   };
 
   const retrieveTodos = (data) => {
-    setTodos([]);
     const formattedDate = formatDateForMongo(selectedDate);
     const foundData = data.find((block) => block.date === formattedDate);
     if (foundData) {
       const decryptedData = decryptData(foundData.todos);
       setTodos(decryptedData);
+    }
+    else{
+      setTodos([]);
     }
   };
 

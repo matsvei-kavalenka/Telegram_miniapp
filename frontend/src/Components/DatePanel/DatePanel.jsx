@@ -8,7 +8,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import calendarIcon from '../../img/calendarIcon.png'; 
 
-function DatePanel({ selectedDate, handleLeftArrowClick, handleRightArrowClick, handleDateChange, disabled }) {
+function DatePanel({ selectedDate, handleLeftArrowClick, handleRightArrowClick, handleDateChange, disabled, startDate }) {
   const formatDate = (date) => {
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -40,7 +40,7 @@ function DatePanel({ selectedDate, handleLeftArrowClick, handleRightArrowClick, 
           </h1>
           <DatePicker
             selected={selectedDate}
-            minDate={new Date()}
+            minDate={startDate}
             onChange={handleDateChange}
             calendarStartDay={1}
             formatWeekDay={nameOfDay => nameOfDay.substr(0,3)}

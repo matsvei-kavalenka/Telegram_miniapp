@@ -14,6 +14,12 @@ function MainCalendar({userId}) {
   const [eventsCalendar, setEventsCalendar] = useState([]);
   const eventsRef = useRef();
   const navigate = useNavigate();
+  const currentDate = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  };
+  
 
   useEffect(() => {
     const getTodos = async (date) => {
@@ -113,10 +119,10 @@ function MainCalendar({userId}) {
                 disableAll={true}
               />
             ))}
-          {todosCalendar.length === 0 && selectedDate >= new Date() && (
+          {todosCalendar.length === 0 && selectedDate >= currentDate() && (
             <Button type='goTo' text='Add a todo' onClick={handleGoToTodo} />
           )}
-          {todosCalendar.length === 0 && selectedDate <= new Date() && <h3>Empty</h3>}
+          {todosCalendar.length === 0 && currentDate() > selectedDate && <h3>Empty</h3>}
           <h2>Events</h2>
           {eventsCalendar
             .sort((a, b) => moment(a.time).valueOf() - moment(b.time).valueOf())

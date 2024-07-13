@@ -10,7 +10,7 @@ function Navigation() {
 
   return (
     <div className='navigation'>
-      <Box sx={{ width: "100%", position: 'fixed', bottom: 0 }}>
+      <Box sx={{ width: "100%", position: 'fixed', bottom: 10 }}>
       <BottomNavigation
         showLabels
         value={value}

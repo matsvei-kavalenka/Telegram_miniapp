@@ -178,6 +178,7 @@ function Events({ userId }) {
         handleLeftArrowClick={handleLeftArrowClick}
         handleRightArrowClick={handleRightArrowClick}
         handleDateChange={handleDateChange}
+        startDate=''
       />
       <div className='main-div'>
         <div className='creation-container'>

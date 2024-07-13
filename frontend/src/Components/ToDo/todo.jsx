@@ -215,6 +215,7 @@ function Todo({ userId }) {
         handleRightArrowClick={handleRightArrowClick}
         handleDateChange={handleDateChange}
         disabled={btnStateDisabled}
+        startDate={new Date()}
       />
       <div className='main-div'>
         <div className='scrollable-div'>

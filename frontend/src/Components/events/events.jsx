@@ -7,7 +7,7 @@ import DatePanel from '../DatePanel/DatePanel';
 import EventField from '../eventField/eventField';
 import moment from 'moment';
 import axios from "axios";
-import CryptoJS, { AES } from 'crypto-js';
+import CryptoJS, { AES } from 'crypto-js';  
 
 function Events({ userId }) {
   const location = useLocation();
@@ -46,10 +46,12 @@ function Events({ userId }) {
     const formattedDate = formatDateForMongo(selectedDate);
     const foundData = data.find(block => block.date === formattedDate);
     if (foundData) {
-      setEvents(foundData.events);
+      const decryptedEvents = decryptData(foundData.events);
+      setEvents(decryptedEvents);
     } else {
       setEvents([]);
     }
+    // eslint-disable-next-line
   }, [selectedDate, data]);
 
   const encryptData = (data) => {
@@ -134,6 +136,7 @@ function Events({ userId }) {
     const foundData = data.find(block => block.date === formattedDate);
     if (foundData) {
       const decryptedEvents = decryptData(foundData.events);
+      console.log(decryptedEvents);
       setEvents(decryptedEvents);
     } else {
       setEvents([]);
@@ -208,7 +211,7 @@ function Events({ userId }) {
           <Button type='createEvent' text='Create Event' onClick={handleAddField} />
         </div>
         <div className='scrollable-event-div'>
-          {events.sort((a, b) => moment(a.time).valueOf() - moment(b.time).valueOf())
+          {Array.isArray(events) && events.sort((a, b) => moment(a.time).valueOf() - moment(b.time).valueOf())
             .map((field) => (
               <EventField
                 key={field.id}

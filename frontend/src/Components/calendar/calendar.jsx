@@ -7,8 +7,10 @@ import axios from 'axios';
 import moment from 'moment';
 import Button from '../Button/Button';
 import { useNavigate } from 'react-router-dom';
+import CryptoJS, { AES } from 'crypto-js';
 
 function MainCalendar({userId}) {
+  const secretKey = process.env.REACT_APP_SECRET_KEY;
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [todosCalendar, setTodosCalendar] = useState([]);
   const [eventsCalendar, setEventsCalendar] = useState([]);
@@ -40,7 +42,7 @@ function MainCalendar({userId}) {
             const filteredTodos = foundData.todos.filter((todo) => todo.checked);
             setTodosCalendar(filteredTodos);
           } else {
-            setTodosCalendar(foundData.todos);
+            setTodosCalendar(decryptData(foundData.todos));
           }
         } else {
           setTodosCalendar([]);
@@ -59,7 +61,7 @@ function MainCalendar({userId}) {
         const formattedDate = formatDateForMongo(date);
         const foundData = response.data.find((block) => block.date === formattedDate);
         if (foundData) {
-          setEventsCalendar(foundData.events);
+          setEventsCalendar(decryptData(foundData.events));
         } else {
           setEventsCalendar([]);
         }
@@ -71,7 +73,13 @@ function MainCalendar({userId}) {
 
     getTodos(selectedDate);
     getEvents(selectedDate);
+    // eslint-disable-next-line
   }, [selectedDate, userId]);
+
+  const decryptData = (encryptedData) => {
+    const decryptedData = AES.decrypt(encryptedData, secretKey).toString(CryptoJS.enc.Utf8);
+    return JSON.parse(decryptedData);
+  };
 
   const handleCalendarClick = (date) => {
     eventsRef.current?.scrollIntoView({ behavior: 'smooth' });

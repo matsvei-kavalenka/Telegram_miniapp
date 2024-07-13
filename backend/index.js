@@ -36,16 +36,14 @@ async function connectDB() {
 
 connectDB();
 
-
-
 const todoSchema = new mongoose.Schema({
   userId: { type: String, required: true },
-  date: String,
+  date: { type: String, required: true },
   todos: [
     {
-      id: Number,
-      text: String,
-      checked: Boolean
+      id: { type: Number, required: true },
+      text: { type: String, required: true },
+      checked: { type: Boolean, required: true }
     }
   ],
 });
@@ -55,9 +53,9 @@ const eventSchema = new mongoose.Schema({
   date: String,
   events: [
     {
-      id: String,
-      time: String,
-      text: String,
+      id: { type: String, required: true },
+      time: { type: String, required: true },
+      text: { type: String, required: true }
     }
   ]
 });
@@ -89,29 +87,21 @@ app.get('/api/events', async (req, res) => {
 
 app.post("/", async (req, res) => {
   try {
-    const { userId, formattedDate, filteredTodos } = req.body;
+    const { userId, formattedDate, encryptedTodos } = req.body;
     const [day, month, year] = formattedDate.split('/');
     const dateFormattedForMongo = `${day}-${month}-${year}`;
 
     const existingTodo = await Todo.findOne({ userId, date: dateFormattedForMongo });
 
     if (existingTodo) {
-      existingTodo.todos = filteredTodos.map(todo => ({
-        id: todo.id,
-        text: todo.text,
-        checked: todo.checked
-      }));
+      existingTodo.todos = encryptedTodos;
       const updatedTodo = await existingTodo.save();
       res.json(updatedTodo.toObject());
     } else {
       const newTodo = new Todo({
         userId,
         date: dateFormattedForMongo,
-        todos: filteredTodos.map(todo => ({
-          id: todo.id,
-          text: todo.text,
-          checked: todo.checked
-        }))
+        todos: encryptedTodos
       });
 
       const savedTodo = await newTodo.save();
@@ -125,29 +115,21 @@ app.post("/", async (req, res) => {
 
 app.post("/event", async (req, res) => {
   try {
-    const { userId, formattedDate, events } = req.body;
+    const { userId, formattedDate, encryptedEvents } = req.body;
     const [day, month, year] = formattedDate.split('/');
     const dateFormattedForMongo = `${day}-${month}-${year}`;
 
     const existingEvent = await Event.findOne({ userId, date: dateFormattedForMongo });
 
     if (existingEvent) {
-      existingEvent.events = events.map(event => ({
-        id: event.id,
-        time: event.time,
-        text: event.text
-      }));
+      existingEvent.events = encryptedEvents;
       const updatedEvent = await existingEvent.save();
       res.json(updatedEvent.toObject());
     } else {
       const newEvent = new Event({
         userId: userId,
         date: dateFormattedForMongo,
-        events: events.map(event => ({
-          id: event.id,
-          time: event.time,
-          text: event.text,
-        }))
+        events: encryptedEvents
       });
 
       const savedEvent = await newEvent.save();

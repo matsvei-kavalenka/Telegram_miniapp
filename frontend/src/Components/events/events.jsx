@@ -73,7 +73,7 @@ function Events({ userId }) {
 
   const handleOnSubmit = async (events) => {
     const formattedDate = formatDate(selectedDate);
-    const encryptedEvents = encryptData(events);  
+    const encryptedEvents = encryptData(events);
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/event`, {
         method: "POST",

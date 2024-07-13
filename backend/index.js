@@ -39,25 +39,13 @@ connectDB();
 const todoSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   date: { type: String, required: true },
-  todos: [
-    {
-      id: { type: Number, required: true },
-      text: { type: String, required: true },
-      checked: { type: Boolean, required: true }
-    }
-  ],
+  todos: { type: String, required: true },
 });
 
 const eventSchema = new mongoose.Schema({
   userId: { type: String, required: true },
-  date: String,
-  events: [
-    {
-      id: { type: String, required: true },
-      time: { type: String, required: true },
-      text: { type: String, required: true }
-    }
-  ]
+  date: { type: String, required: true },
+  events: { type: String, required: true }
 });
 
 const Todo = mongoose.model("Todo", todoSchema);

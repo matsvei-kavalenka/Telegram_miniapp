@@ -140,7 +140,7 @@ function Todo({ userId }) {
       return;
     }
     const filteredTodos = todos.filter(x => x.text.length !== 0);
-    const encryptedTodos = encryptData({ userId, formattedDate, filteredTodos });
+    const encryptedTodos = encryptData(filteredTodos);
     
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}`, {

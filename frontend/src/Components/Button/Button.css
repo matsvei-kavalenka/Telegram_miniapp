@@ -24,7 +24,7 @@
     right: 10px;
     width: 100px;
     height: 25px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 1px solid var(--tg-theme-text-color);
     text-align: center;
     cursor: pointer;
@@ -162,14 +162,14 @@
 
 .save{
     position: absolute;
-    top: 3px;
+    top: 5px;
     right: 10px;
     width: 100px;
-    height: 30px;
+    height: 25px;
+    border-radius: 5px;
     text-align: center;
     cursor: pointer;
-    border-radius: 10px;
-    border: none;
+    border: 1px solid var(--tg-theme-text-color);
 }
 
 .goTo {

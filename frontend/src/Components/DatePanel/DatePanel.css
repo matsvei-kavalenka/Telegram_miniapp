@@ -29,3 +29,37 @@
     align-items: center;
     justify-content: center;
 }
+
+.react-datepicker{
+    background-color: var(--tg-theme-bg-color)!important;
+
+}
+
+.react-datepicker__header {
+    background-color: var(--tg-theme-bg-color)!important;
+    border-bottom: 1px solid var(--tg-theme-text-color)!important;
+    color: var(--tg-theme-text-color)!important;
+    
+}
+
+.react-datepicker__day {
+    color: var(--tg-theme-text-color)!important; 
+    background-color: var(--tg-theme-bg-color)!important;
+}
+
+.react-datepicker__day-name {
+    color: var(--tg-theme-text-color)!important;
+}
+.react-datepicker__current-month,
+.react-datepicker-year-header {
+    color: var(--tg-theme-text-color)!important;
+}
+
+.react-datepicker__day--selected{
+    background-color: var(--tg-theme-button-color)!important;
+    color: white!important;
+}
+.react-datepicker__day:hover{
+    background-color: var(--tg-theme-button-color)!important;
+    color: white!important;
+}

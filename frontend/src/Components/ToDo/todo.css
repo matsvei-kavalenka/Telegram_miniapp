@@ -30,7 +30,7 @@ body {
 
 
 hr.separator{
-    border-top: 2px solid;
+    border-top: 1px solid;
     margin-top: 20px;
     margin-bottom: 20px;
     color: var(--tg-theme-text-color);

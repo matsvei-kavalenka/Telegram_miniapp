@@ -14,7 +14,7 @@ function TodoField({ id, checked, text, onChangeCheckbox, onChangeInput, onDelet
     <div className="form-row">
       <input
         id={`checkbox-${id}`}
-        className={`${done ? 'done' : ''}`}
+        className={`todoCheckbox ${done ? 'done' : ''}`}
         type="checkbox"
         checked={checked}
         onChange={onChangeCheckbox}

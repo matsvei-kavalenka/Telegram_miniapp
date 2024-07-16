@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Button.css';
 
 function Button({ type, text, onClick, img, alt, disabled }) {
-    const buttonClass = `${type}`;
+    const buttonClass = `button ${type}`;
     
     return (
         <button className={buttonClass} onClick={onClick} disabled={disabled}>

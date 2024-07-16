@@ -39,7 +39,9 @@ function MainCalendar({userId}) {
           date.setHours(0, 0, 0, 0);
 
           if (date < today) {
-            const filteredTodos = foundData.todos.filter((todo) => todo.checked);
+            console.log(decryptData(foundData.todos))
+            const filteredTodos = decryptData(foundData.todos).filter(todo => todo.checked === true);
+            console.log(filteredTodos)
             setTodosCalendar(filteredTodos);
           } else {
             setTodosCalendar(decryptData(foundData.todos));

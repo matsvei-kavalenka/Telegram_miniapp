@@ -10,19 +10,22 @@ function Navigation() {
 
   return (
     <div className='navigation'>
-      <Box sx={{ width: "100%", position: 'fixed', bottom: 10 }}>
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-          navigate(`/${newValue}`);
-        }}
-      >
-        <BottomNavigationAction label="ToDo" value="" />
-        <BottomNavigationAction label="Events" value="events" />
-        <BottomNavigationAction label="Calendar" value="calendar" />
-      </BottomNavigation>
+      <Box sx={{ position: 'fixed', bottom: 5, zIndex: 1000, width: '95%', left: '50%', transform: 'translateX(-50%)'}}>
+        <BottomNavigation
+          showLabels
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+            navigate(`/${newValue}`);
+          }}
+          sx={{ backgroundColor: 'var(--tg-theme-secondary-bg-color)', borderRadius: 5, '& .MuiBottomNavigationAction-label': {
+          fontSize: 14,
+        },}}
+        >
+          <BottomNavigationAction label="ToDo" value="" sx={{color:'var(--tg-theme-text-color)', fontWeight: 'bold',}}/>
+          <BottomNavigationAction label="Events" value="events" sx={{color:'var(--tg-theme-text-color)', fontWeight: 'bold',}}/>
+          <BottomNavigationAction label="Calendar" value="calendar" sx={{color:'var(--tg-theme-text-color)', fontWeight: 'bold', fontSize: 20}} />
+        </BottomNavigation>
       </Box>
     </div>
     

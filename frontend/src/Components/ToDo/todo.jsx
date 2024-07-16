@@ -94,6 +94,7 @@ function Todo({ userId }) {
     const updatedPendingTodos = pendingTodos.map((todo, idx) =>
       idx === index ? { ...todo, checked: !todo.checked } : todo
     );
+    updatedPendingTodos.filter(todo => todo.checked === false);
     setPendingTodos(updatedPendingTodos);
     const newDate = new Date();
     newDate.setDate(newDate.getDate() - 1);
@@ -183,7 +184,7 @@ function Todo({ userId }) {
     const formattedDate = formatDateForMongo(newDate);
     const foundData = data.find((block) => block.date === formattedDate);
     if (foundData) {
-      const todos = foundData.todos;
+      const todos = decryptData(foundData.todos);
       const filteredTodos = todos.filter(x => x.checked === false);
       setPendingTodos(filteredTodos);
     }
@@ -214,7 +215,10 @@ function Todo({ userId }) {
   };
 
   const handlePendingDelete = (id) => {
-    const updatedPendingTodos = pendingTodos.filter((field) => field.id !== id);
+    const updatedPendingTodos = pendingTodos.map((pendingTodo, idx) =>
+      idx === id ? { ...pendingTodo, checked: true } : pendingTodo
+    );
+    setPendingTodos(updatedPendingTodos);
     setPendingTodos(updatedPendingTodos);
     const newDate = new Date();
     newDate.setDate(newDate.getDate() - 1);

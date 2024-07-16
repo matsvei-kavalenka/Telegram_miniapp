@@ -1,3 +1,8 @@
+.button{
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-text-color);
+}
+
 .add{
     position:absolute;
     bottom:10px;
@@ -14,14 +19,13 @@
 }
 
 .createEvent{
+    margin-top: 5px;
     position: absolute;
     right: 10px;
     width: 100px;
-    height: 30px;
-    border-width: 2px;
-    border-color: black;
-    background-color:ghostwhite;
+    height: 25px;
     border-radius: 10px;
+    border: 1px solid var(--tg-theme-text-color);
     text-align: center;
     cursor: pointer;
 }
@@ -60,7 +64,7 @@
     -webkit-tap-highlight-color: transparent;
     position: absolute;
     bottom:10px;
-    left:10px;
+    right:10px;
     background: none;
     border: none;
     cursor: pointer;
@@ -156,20 +160,16 @@
     height: 25px;
 }
 
-
-
 .save{
     position: absolute;
     top: 3px;
     right: 10px;
     width: 100px;
     height: 30px;
-    border-width: 2px;
-    border-color: black;
-    background-color:ghostwhite;
-    border-radius: 10px;
     text-align: center;
     cursor: pointer;
+    border-radius: 10px;
+    border: none;
 }
 
 .goTo {

@@ -198,7 +198,7 @@ function Events({ userId }) {
       />
       <div className='main-div'>
         <div className='creation-container'>
-          <CustomTimePicker value={timeValue} onChange={handleTimeChange} />
+          <CustomTimePicker id='timepicker' value={timeValue} onChange={handleTimeChange} />
           <input 
             id='event' 
             type='text' 

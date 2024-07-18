@@ -5,7 +5,7 @@ import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 function Navigation() {
-  const [value, setValue] = React.useState('todo');
+  const [value, setValue] = React.useState('');
   const navigate = useNavigate();
 
   return (

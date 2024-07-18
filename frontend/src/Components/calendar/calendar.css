@@ -194,7 +194,8 @@
 }
 
 h2 {
-    color: var(--tg-theme-text-color);
+    color: var(--tg-theme-text-color);;
+    margin-left: 10px
 }
 
 .bottom-div{

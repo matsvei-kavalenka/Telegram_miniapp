@@ -30,6 +30,10 @@ button {
     cursor: pointer;
 }
 
+.createEvent:hover {
+    background-color: #4c96d7;
+}
+
 .createEvent:active{
     scale: 1.03;
 }
@@ -151,11 +155,33 @@ button {
     border: 1px solid var(--tg-theme-text-color);
 }
 
+.save:hover {
+    background-color: #4c96d7;
+}
+
 .goTo {
+    margin-left: 10px;
     background: none!important;
     border: none;
     font-family: arial, sans-serif;
     color: #069;
     text-decoration: underline;
     cursor: pointer;
-}   
+}  
+
+.alertButton{
+    position: absolute;
+    bottom: 10px;
+    width: 25%;
+    height: 25%;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    background-color: var(--tg-theme-bg-color);
+    border: 1px solid var(--tg-theme-text-color);
+    font-weight: bold;
+}
+
+.alertButton:hover {
+    background-color: #4c96d7;
+}

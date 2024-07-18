@@ -150,9 +150,10 @@ function MainCalendar({userId}) {
                 deleteDisabled={true}
               />
             ))}
-          {eventsCalendar.length === 0 && (
+          {todosCalendar.length === 0 && selectedDate >= currentDate() && (
             <Button className='goTo' onClick={handleGoToEvents} >Add an event</Button>
           )}
+          {eventsCalendar.length === 0 && currentDate() > selectedDate && <h3>Empty</h3>}
         </div>
       </div>
     </div>

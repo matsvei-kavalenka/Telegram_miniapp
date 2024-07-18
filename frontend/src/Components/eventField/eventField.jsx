@@ -31,11 +31,15 @@ function EventField({ id, text, onChangeInput, onDelete, onEdit, onSave, timeVal
       />
 
       {!disabled ? (
-        <Button type="save" onClick={() => onSave(id)} text='Save' alt="Save" />
+        <Button className="save" onClick={() => onSave(id)}> Save </Button>
       ) : (
         <div>
-          <Button type="edit" onClick={() => navigate ? navigate() : onEdit(id)} img={editIcon} alt="Edit" />
-          <Button type="delete" onClick={() => onDelete(id)} img={deleteIcon} alt="Delete" disabled={deleteDisabled} />
+          <Button className="edit" onClick={() => navigate ? navigate() : onEdit(id)}>
+            <img src={editIcon} alt="Edit"/>
+          </Button>
+          <Button className="delete" onClick={() => onDelete(id)} disabled={deleteDisabled} >
+            <img src={deleteIcon} alt="Delete"/>
+          </Button>
         </div>
       )}
     </div>

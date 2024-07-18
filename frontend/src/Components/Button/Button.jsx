@@ -1,23 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './Button.css';
 
-function Button({ type, text, onClick, img, alt, disabled }) {
-    const buttonClass = `button ${type}`;
-    
+function Button({ children, ...props }) {
     return (
-        <button className={buttonClass} onClick={onClick} disabled={disabled}>
-            {text}
-            {img && <img src={img} alt={alt} />}
+        <button {...props}>
+            {children}
         </button>
     );
 }
-
-Button.propTypes = {
-    type: PropTypes.string.isRequired,
-    text: PropTypes.string,
-    img: PropTypes.string,
-    alt: PropTypes.string
-};
 
 export default Button;

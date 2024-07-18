@@ -1,5 +1,5 @@
-.button{
-    background-color: var(--tg-theme-button-color);
+button {
+    background-color: #5da7e4;
     color: var(--tg-theme-text-color);
 }
 
@@ -37,27 +37,6 @@
 
 .add:active{
     scale: 1.003;
-}
-
-.refresh{
-    -webkit-tap-highlight-color: transparent;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    margin-left: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-}
-
-.refresh img{
-    width: 30px;
-    height: 30px;
-}
-
-.refresh:active{
-    scale:1.02;
 }
 
 .plus{

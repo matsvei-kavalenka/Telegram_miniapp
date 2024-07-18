@@ -56,10 +56,10 @@
 }
 
 .react-datepicker__day--selected{
-    background-color: var(--tg-theme-button-color)!important;
+    background-color: #5da7e4!important;
     color: white!important;
 }
 .react-datepicker__day:hover{
-    background-color: var(--tg-theme-button-color)!important;
+    background-color: #5da7e4!important;
     color: white!important;
 }

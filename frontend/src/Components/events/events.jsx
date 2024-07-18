@@ -136,7 +136,6 @@ function Events({ userId }) {
     const foundData = data.find(block => block.date === formattedDate);
     if (foundData) {
       const decryptedEvents = decryptData(foundData.events);
-      console.log(decryptedEvents);
       setEvents(decryptedEvents);
     } else {
       setEvents([]);

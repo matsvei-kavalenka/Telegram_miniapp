@@ -73,10 +73,6 @@ function Todo({ userId }) {
   
   const handleKeyDown = (event, id) => {
     if (event.key === 'Enter') {
-      const inputElement = document.getElementById(`text-${id}`);
-      if (inputElement) {
-        inputElement.blur();
-      }
       handleOnSubmit(todos, selectedDate);
       AddOnBtnClick();
     }
@@ -205,7 +201,22 @@ function Todo({ userId }) {
   };
 
   const AddOnBtnClick = () => {
-    setTodos(todos.concat({ id: todos.length, text: '', checked: false }));
+    const inputElement = document.getElementById(`text-${todos.length-1}`);
+    console.log(inputElement.value.trim());
+    if (inputElement.value.trim() !== '') {
+      setTodos(prevTodos => {
+        const newTodos = prevTodos.concat({ id: prevTodos.length, text: '', checked: false });
+        setTimeout(() => {
+          const inputElement = document.getElementById(`text-${prevTodos.length}`);
+          if (inputElement) {
+            inputElement.focus();
+          }
+        }, 0);
+        return newTodos;
+      });
+    }
+
+    
   };
 
   const handleDelete = (id) => {
@@ -226,7 +237,7 @@ function Todo({ userId }) {
   };
 
   return (
-    <div>
+    <>
       <DatePanel
         selectedDate={selectedDate}
         handleLeftArrowClick={handleLeftArrowClick}
@@ -273,10 +284,12 @@ function Todo({ userId }) {
           </OutsideClicker>
         </div>
         <div className='div-sticky'>
-          <Button type='plus' onClick={AddOnBtnClick} img={plus} alt='Plus' />
+          <Button className='plus' onClick={AddOnBtnClick}>
+            <img src={plus} alt= 'plus'/>
+          </Button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

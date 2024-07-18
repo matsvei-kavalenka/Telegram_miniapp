@@ -33,7 +33,9 @@ function DatePanel({ selectedDate, handleLeftArrowClick, handleRightArrowClick, 
 
   return (
       <div className='date-main-div'>
-        <Button type="left arrow" onClick={handleLeftArrowClick} img={leftArrow} alt="Left arrow" disabled={disabled}/>
+        <Button className="left arrow" onClick={handleLeftArrowClick} disabled={disabled}>
+          <img src={leftArrow} alt="Left arrow"/>
+        </Button>
         <div className='date-input-container'>
           <h1 className='day-h1'>
             {additionalContent(selectedDate)}
@@ -45,11 +47,15 @@ function DatePanel({ selectedDate, handleLeftArrowClick, handleRightArrowClick, 
             calendarStartDay={1}
             formatWeekDay={nameOfDay => nameOfDay.substr(0,3)}
             customInput={
-              <Button type="date" img={calendarIcon} alt="Calendar Icon" />
+              <Button className="date" >
+                <img src={calendarIcon} alt="Calendar Icon"/>
+              </Button>
             }
           />
         </div>
-        <Button type="right arrow" onClick={handleRightArrowClick} img={rightArrow} alt="Right Arrow" />
+        <Button className="right arrow" onClick={handleRightArrowClick}>
+          <img src={rightArrow} alt="Right arrow"/>
+        </Button>
       </div>
   );
 }

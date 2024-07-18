@@ -130,7 +130,7 @@ function MainCalendar({userId}) {
               />
             ))}
           {todosCalendar.length === 0 && selectedDate >= currentDate() && (
-            <Button type='goTo' text='Add a todo' onClick={handleGoToTodo} />
+            <Button className='goTo' onClick={handleGoToTodo} >Add a todo</Button>
           )}
           {todosCalendar.length === 0 && currentDate() > selectedDate && <h3>Empty</h3>}
           <h2>Events</h2>
@@ -151,7 +151,7 @@ function MainCalendar({userId}) {
               />
             ))}
           {eventsCalendar.length === 0 && (
-            <Button type='goTo' text='Add an event' onClick={handleGoToEvents} />
+            <Button className='goTo' onClick={handleGoToEvents} >Add an event</Button>
           )}
         </div>
       </div>

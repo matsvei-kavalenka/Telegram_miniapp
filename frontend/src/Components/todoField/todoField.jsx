@@ -32,7 +32,9 @@ function TodoField({ id, checked, text, onChangeCheckbox, onChangeInput, onDelet
         autoComplete="off"
         disabled={disableAll}
       />
-      <Button id={`delete-${id}`} type="deleteTodo" onClick={() => onDelete(id)} img={deleteIcon} alt="Delete Todo" disabled={disableAll}/>
+      <Button id={`delete-${id}`} className="deleteTodo" onClick={() => onDelete(id)} disabled={disableAll}>
+        <img src={deleteIcon} alt="Delete Todo" />
+      </Button>
     </div>
   );
 }

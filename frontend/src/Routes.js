@@ -6,14 +6,14 @@ import Calendar from './Components/calendar/calendar';
 import Navigation from './Components/navigation/navigation';
 
 const AppRoutes = ({userId}) => (
-  <div>
+  <>
     <Navigation />
     <Routes>
       <Route key="todo" path="/" element={<ToDo userId={userId} />} />
       <Route key="events" path="/events" element={<Events userId={userId} />} />
       <Route key="calendar" path="/calendar" element={<Calendar userId={userId} />} />
     </Routes>
-  </div>
+  </>
 );
 
 export default AppRoutes;

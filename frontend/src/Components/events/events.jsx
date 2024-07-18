@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React,{ useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import "./events.css";
 import CustomTimePicker from '../CustomTimePicker/timepicker';
@@ -188,7 +188,7 @@ function Events({ userId }) {
   };
 
   return (
-    <div>
+    <>
       <DatePanel
         selectedDate={selectedDate}
         handleLeftArrowClick={handleLeftArrowClick}
@@ -208,7 +208,7 @@ function Events({ userId }) {
             onChange={handleInputChange} 
             autoComplete="off"
           />
-          <Button type='createEvent' text='Create Event' onClick={handleAddField} />
+          <Button className='createEvent'  onClick={handleAddField} >Create Event</Button>
         </div>
         <div className='scrollable-event-div'>
           {Array.isArray(events) && events.sort((a, b) => moment(a.time).valueOf() - moment(b.time).valueOf())
@@ -228,7 +228,7 @@ function Events({ userId }) {
             ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

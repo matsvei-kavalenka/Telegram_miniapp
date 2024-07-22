@@ -1,6 +1,8 @@
-.rc-time-picker {
+.rc-time-picker{
     color: var(--tg-theme-text-color)!important;
-  }
+}
+
+
 
 .rc-time-picker-input {
     border: 1px solid  var(--tg-theme-text-color)!important;
@@ -12,6 +14,12 @@
     text-align: center !important;
     width: 60px !important;
     height: 25px !important;
+}
+
+.rc-time-picker-input:disabled{
+    background-color: #ccc !important;
+    color: var(--tg-theme-text-color) !important;
+
 }
 
 .rc-time-picker-panel-inner {
@@ -38,3 +46,4 @@ li.rc-time-picker-panel-select-option-selected {
     text-align: center;
     font-size: 14px!important;
 }
+

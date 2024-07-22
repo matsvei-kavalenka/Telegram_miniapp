@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import "./eventField.css";
+import "./EventField.css";
 import CustomTimePicker from '../CustomTimePicker/timepicker';
 import deleteIcon from '../../img/deleteIcon.png';
 import editIcon from '../../img/editIcon.png'

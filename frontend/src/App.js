@@ -1,6 +1,6 @@
 import './App.css';
 import AppRoutes from './Routes';
-import Alert from './Alert/Alert';
+import Alert from './Components/Alert/Alert';
 import { useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 

@@ -1,12 +1,22 @@
-import React from 'react';
-import "./navigation.css";
+import React, { useEffect } from 'react';
+import "./Navigation.css";
 import Box from '@mui/material/Box';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-function Navigation() {
-  const [value, setValue] = React.useState('');
+function Navigation({ passedValue, onNavigationChange }) {
+  const [value, setValue] = React.useState(passedValue);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setValue(passedValue);
+  }, [passedValue]);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+    onNavigationChange(newValue);
+    navigate(`/${newValue}`);
+  };
 
   return (
     <div className='navigation'>
@@ -14,13 +24,10 @@ function Navigation() {
         <BottomNavigation
           showLabels
           value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-            navigate(`/${newValue}`);
-          }}
+          onChange={handleChange}
           sx={{ backgroundColor: 'var(--tg-theme-secondary-bg-color)', borderRadius: 5, '& .MuiBottomNavigationAction-label': {
-          fontSize: 14,
-        },}}
+            fontSize: 14,
+          },}}
         >
           <BottomNavigationAction label="ToDo" value="" sx={{color:'var(--tg-theme-text-color)', fontWeight: 'bold',}}/>
           <BottomNavigationAction label="Events" value="events" sx={{color:'var(--tg-theme-text-color)', fontWeight: 'bold',}}/>
@@ -28,7 +35,6 @@ function Navigation() {
         </BottomNavigation>
       </Box>
     </div>
-    
   );
 }
 

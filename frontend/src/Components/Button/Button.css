@@ -30,13 +30,20 @@ button {
     cursor: pointer;
 }
 
-.createEvent:hover {
+
+.createEvent:hover:enabled {
     background-color: #4c96d7;
 }
 
-.createEvent:active{
-    scale: 1.03;
+.createEvent:active:enabled {
+    background-color: #cccccc;
 }
+
+.createEvent:disabled{
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+}
+
 
 
 .add:active{

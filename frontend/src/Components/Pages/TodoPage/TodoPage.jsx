@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import './todo.css';
-import Button from '../Button/Button';
-import plus from '../../img/plus.png';
-import TodoField from '../todoField/todoField';
+import './TodoPage.css';
+import Button from '../../Button/Button';
+import plus from '../../../img/plus.png';
+import TodoField from '../../TodoField/TodoField';
 import axios from 'axios';
-import DatePanel from '../DatePanel/DatePanel';
-import OutsideClicker from '../OutsideClick/OutsideClick';
+import DatePanel from '../../DatePanel/DatePanel';
+import OutsideClicker from '../../OutsideClick/OutsideClick';
 import CryptoJS, { AES } from 'crypto-js';
 
-function Todo({ userId }) {
+function Todo({ userId, onNavigationChange }) {
   const location = useLocation();
   const secretKey = process.env.REACT_APP_SECRET_KEY;
   const { dateCalendar } = location.state || {};
@@ -28,6 +28,10 @@ function Todo({ userId }) {
   useEffect(() => {
     setSelectedDate(dateCalendar ? new Date(dateCalendar) : new Date());
   }, [dateCalendar]);
+
+  useEffect(() => {
+    onNavigationChange('');
+  }, [onNavigationChange]);
 
   useEffect(() => {
     retrievePendingTodos(data);
@@ -201,6 +205,10 @@ function Todo({ userId }) {
   };
 
   const AddOnBtnClick = () => {
+    if (todos.length === 0) {
+      setTodos([{ id: 0, text: '', checked: false }]);
+      return;
+    }
     const inputElement = document.getElementById(`text-${todos.length-1}`);
     console.log(inputElement.value.trim());
     if (inputElement.value.trim() !== '') {
@@ -248,6 +256,7 @@ function Todo({ userId }) {
       />
       <div className='main-div'>
         <div className='scrollable-div'>
+        
           <OutsideClicker onOutsideClick={() => handleOnSubmit(todos, selectedDate)}>
             {pendingTodos.length !== 0 && isToday(selectedDate) && (
               <>
@@ -282,6 +291,7 @@ function Todo({ userId }) {
               />
             ))}
           </OutsideClicker>
+          
         </div>
         <div className='div-sticky'>
           <Button className='plus' onClick={AddOnBtnClick}>

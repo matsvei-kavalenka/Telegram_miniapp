@@ -1,9 +1,9 @@
 import React from 'react';
 import './Button.css';
 
-function Button({ children, ...props }) {
+function Button({ children, disabled, ...props }) {
     return (
-        <button {...props}>
+        <button disabled={disabled} {...props}>
             {children}
         </button>
     );

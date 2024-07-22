@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './calendar.css';
+import './CalendarPage.css';
 import Calendar from 'react-calendar';
-import TodoField from '../todoField/todoField';
-import EventField from '../eventField/eventField';
+import TodoField from '../../TodoField/TodoField';
+import EventField from '../../EventField/EventField';
 import axios from 'axios';
 import moment from 'moment';
-import Button from '../Button/Button';
+import Button from '../../Button/Button';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS, { AES } from 'crypto-js';
 
-function MainCalendar({userId}) {
+function CalendarPage({userId, onNavigationChange}) {
   const secretKey = process.env.REACT_APP_SECRET_KEY;
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [todosCalendar, setTodosCalendar] = useState([]);
@@ -21,7 +21,10 @@ function MainCalendar({userId}) {
     today.setHours(0, 0, 0, 0);
     return today;
   };
-  
+
+  useEffect(() => {
+    onNavigationChange('calendar');
+  }, [onNavigationChange]);
 
   useEffect(() => {
     const getTodos = async (date) => {
@@ -97,10 +100,12 @@ function MainCalendar({userId}) {
 
   const handleGoToEvents = () => {
     navigate('/events', { state: { dateCalendar: selectedDate } });
+    onNavigationChange('events');
   };
 
   const handleGoToTodo = () => {
     navigate('/', { state: { dateCalendar: selectedDate } });
+    onNavigationChange('');
   };
 
   const handleDelete = (id) => {
@@ -160,4 +165,4 @@ function MainCalendar({userId}) {
   );
 }
 
-export default MainCalendar;
+export default CalendarPage;

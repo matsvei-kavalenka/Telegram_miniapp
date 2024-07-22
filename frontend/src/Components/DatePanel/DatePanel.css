@@ -63,3 +63,10 @@
     background-color: #5da7e4!important;
     color: white!important;
 }
+
+
+.react-datepicker__day--disabled, 
+.react-datepicker__day--disabled:hover {
+  color: #ccc !important;
+  cursor: not-allowed !important;
+}

@@ -1,15 +1,15 @@
 import React,{ useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import "./events.css";
-import CustomTimePicker from '../CustomTimePicker/timepicker';
-import Button from '../Button/Button';
-import DatePanel from '../DatePanel/DatePanel';
-import EventField from '../eventField/eventField';
+import "./EventsPage.css";
+import CustomTimePicker from '../../CustomTimePicker/timepicker';
+import Button from '../../Button/Button';
+import DatePanel from '../../DatePanel/DatePanel';
+import EventField from '../../EventField/EventField';
 import moment from 'moment';
 import axios from "axios";
 import CryptoJS, { AES } from 'crypto-js';  
 
-function Events({ userId }) {
+function Events({ userId, onNavigationChange }) {
   const location = useLocation();
   const secretKey = process.env.REACT_APP_SECRET_KEY;
   const { dateCalendar } = location.state || {};
@@ -18,12 +18,21 @@ function Events({ userId }) {
   const [events, setEvents] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [timeValue, setTimeValue] = useState(moment());
+  const currentDate = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  };
 
   useEffect(() => {
     if (dateCalendar && !isNaN(new Date(dateCalendar))) {
       setSelectedDate(new Date(dateCalendar));
     }
   }, [dateCalendar]);
+
+  useEffect(() => {
+    onNavigationChange('events');
+  }, [onNavigationChange]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -197,7 +206,7 @@ function Events({ userId }) {
       />
       <div className='main-div'>
         <div className='creation-container'>
-          <CustomTimePicker id='timepicker' value={timeValue} onChange={handleTimeChange} />
+          <CustomTimePicker id='timepicker' value={timeValue} disabled={selectedDate <= currentDate()} onChange={handleTimeChange} />
           <input 
             id='event' 
             type='text' 
@@ -205,9 +214,10 @@ function Events({ userId }) {
             placeholder='Event' 
             value={inputValue} 
             onChange={handleInputChange} 
+            disabled={selectedDate <= currentDate()}
             autoComplete="off"
           />
-          <Button className='createEvent'  onClick={handleAddField} >Create Event</Button>
+          <Button className='createEvent' disabled={selectedDate <= currentDate() } onClick={handleAddField}> Create Event </Button>
         </div>
         <div className='scrollable-event-div'>
           {Array.isArray(events) && events.sort((a, b) => moment(a.time).valueOf() - moment(b.time).valueOf())

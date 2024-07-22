@@ -1,6 +1,6 @@
 import React from 'react';
 import './Alert.css';
-import Button from '../Components/Button/Button';
+import Button from '../Button/Button';
 
 function Alert({ hide, onClick1, onClick2, title, message }) {
   if (hide) return null;

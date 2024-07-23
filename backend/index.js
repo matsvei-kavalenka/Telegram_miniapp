@@ -2,8 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
+const bot = require('./Bot/bot');
 const bodyParser = require('body-parser');
+const { Todo, Event } = require('./models');
 require('dotenv').config();
+
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -36,20 +39,6 @@ async function connectDB() {
 
 connectDB();
 
-const todoSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
-  date: { type: String, required: true },
-  todos: { type: String, required: true },
-});
-
-const eventSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
-  date: { type: String, required: true },
-  events: { type: String, required: true }
-});
-
-const Todo = mongoose.model("Todo", todoSchema);
-const Event = mongoose.model("Event", eventSchema);
 
 app.get('/api/todo', async (req, res) => {
   const userId = req.query.userId;

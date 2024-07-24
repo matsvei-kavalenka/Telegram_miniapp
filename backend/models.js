@@ -13,10 +13,17 @@ const eventSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
     telegramId: { type: String, required: true, unique: true },
-  });
+});
+
+const notificationSchema = new mongoose.Schema({
+  telegramId: { type: String, required: true },
+  time: { type: String, required: true },
+  enabled: { type: Boolean, required: true }
+});
 
 const Todo = mongoose.model("Todo", todoSchema);
 const Event = mongoose.model("Event", eventSchema);
 const User = mongoose.model('User', userSchema);
+const Notification = mongoose.model('Notification', notificationSchema);
 
-module.exports = { Todo, Event, User };
+module.exports = { Todo, Event, User, Notification };

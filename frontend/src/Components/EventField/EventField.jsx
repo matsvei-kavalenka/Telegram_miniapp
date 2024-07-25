@@ -12,7 +12,7 @@ function EventField({ id, text, onChangeInput, onDelete, onEdit, onSave, timeVal
   };
 
   const handleTimeChange = (value) => {
-    console.log(id,value)
+    console.log(id, value)
     onTimeChange(id, value);
   };
 
@@ -35,10 +35,10 @@ function EventField({ id, text, onChangeInput, onDelete, onEdit, onSave, timeVal
       ) : (
         <div>
           <Button className="edit" onClick={() => navigate ? navigate() : onEdit(id)}>
-            <img src={editIcon} alt="Edit"/>
+            <img src={editIcon} alt="Edit" />
           </Button>
           <Button className="delete" onClick={() => onDelete(id)} disabled={deleteDisabled} >
-            <img src={deleteIcon} alt="Delete"/>
+            <img src={deleteIcon} alt="Delete" />
           </Button>
         </div>
       )}

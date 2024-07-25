@@ -3,22 +3,22 @@ button {
     color: var(--tg-theme-text-color);
 }
 
-.add{
-    position:absolute;
-    bottom:10px;
-    right:10px;
+.add {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
     margin-left: 10px;
     width: 60px;
     height: 30px;
     border-width: 1px;
     border-color: black;
-    background-color:ghostwhite;
+    background-color: ghostwhite;
     border-radius: 10px;
     text-align: center;
     cursor: pointer;
 }
 
-.createEvent{
+.createEvent {
     margin-top: 5px;
     position: absolute;
     right: 10px;
@@ -39,42 +39,42 @@ button {
     background-color: #cccccc;
 }
 
-.createEvent:disabled{
+.createEvent:disabled {
     background-color: #d3d3d3;
     cursor: not-allowed;
 }
 
 
 
-.add:active{
+.add:active {
     scale: 1.003;
 }
 
-.plus{
+.plus {
     -webkit-tap-highlight-color: transparent;
     position: absolute;
-    bottom:10px;
-    right:10px;
+    bottom: 10px;
+    right: 10px;
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
 }
 
-.plus img{
+.plus img {
     width: 30px;
     height: 30px;
 }
 
-.left{
-    margin-left: 30px;   
+.left {
+    margin-left: 30px;
 }
 
-.right{
+.right {
     margin-right: 30px;
 }
 
-.arrow{
+.arrow {
     margin-top: 5px;
     flex-shrink: 0;
     -webkit-tap-highlight-color: transparent;
@@ -84,7 +84,7 @@ button {
     padding: 0;
 }
 
-.arrow img{
+.arrow img {
     width: 30px;
     height: 30px;
 }
@@ -97,13 +97,13 @@ button {
     cursor: pointer;
     padding: 0;
 }
-  
+
 .date img {
     width: 30px;
     height: 30px;
 }
 
-.edit{
+.edit {
     -webkit-tap-highlight-color: transparent;
     position: absolute;
     top: 3px;
@@ -114,12 +114,12 @@ button {
     padding: 0;
 }
 
-.edit img{
+.edit img {
     width: 25px;
     height: 25px;
 }
 
-.delete{
+.delete {
     -webkit-tap-highlight-color: transparent;
     position: absolute;
     top: 3px;
@@ -130,12 +130,12 @@ button {
     padding: 0;
 }
 
-.delete img{
+.delete img {
     width: 25px;
     height: 25px;
 }
 
-.deleteTodo{
+.deleteTodo {
     -webkit-tap-highlight-color: transparent;
     position: absolute;
     right: 20px;
@@ -145,12 +145,12 @@ button {
     padding: 0;
 }
 
-.deleteTodo img{
+.deleteTodo img {
     width: 25px;
     height: 25px;
 }
 
-.save{
+.save {
     position: absolute;
     top: 5px;
     right: 10px;
@@ -168,15 +168,15 @@ button {
 
 .goTo {
     margin-left: 10px;
-    background: none!important;
+    background: none !important;
     border: none;
     font-family: arial, sans-serif;
     color: #069;
     text-decoration: underline;
     cursor: pointer;
-}  
+}
 
-.alertButton{
+.alertButton {
     position: absolute;
     bottom: 10px;
     width: 25%;

@@ -9,11 +9,11 @@ const mongoFormatDate = (date) => {
     return `${day}-${month}-${year}`;
 };
 
-const handleDateRange = async (chatId, days) => {
+const handleDateRange = async (chatId, days, step) => {
     const today = moment().toDate();
     let startDate, endDate;
 
-    if (userStates[chatId].step === 'show_past') {
+    if (step === 'show_past') {
         startDate = moment(today).subtract(days, 'days').toDate();
         endDate = today;
     } else if (userStates[chatId].step === 'show_future') {

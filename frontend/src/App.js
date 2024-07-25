@@ -31,12 +31,12 @@ function App() {
     <BrowserRouter>
       <AppRoutes userId={userId} />
       {!hide && (
-        <Alert 
-        title='Exit'
-        message='Are you sure you want to leave?' 
-        hide={hide} 
-        onClick1={() => tg.close()} 
-        onClick2={() => setHide(true)}/>
+        <Alert
+          title='Exit'
+          message='Are you sure you want to leave?'
+          hide={hide}
+          onClick1={() => tg.close()}
+          onClick2={() => setHide(true)} />
       )}
     </BrowserRouter>
   );

@@ -11,7 +11,7 @@
     border-radius: 5px;
     z-index: 1100;
 }
-  
+
 .alert-overlay {
     position: fixed;
     top: 0;
@@ -30,7 +30,5 @@
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color:var(--tg-theme-text-color);
-  }
-
-  
+    color: var(--tg-theme-text-color);
+}

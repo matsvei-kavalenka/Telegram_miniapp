@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import "./EventsPage.css";
 import CustomTimePicker from '../../CustomTimePicker/timepicker';
@@ -7,7 +7,7 @@ import DatePanel from '../../DatePanel/DatePanel';
 import EventField from '../../EventField/EventField';
 import moment from 'moment';
 import axios from "axios";
-import CryptoJS, { AES } from 'crypto-js';  
+import CryptoJS, { AES } from 'crypto-js';
 
 function Events({ userId, onNavigationChange }) {
   const location = useLocation();
@@ -207,17 +207,17 @@ function Events({ userId, onNavigationChange }) {
       <div className='main-div'>
         <div className='creation-container'>
           <CustomTimePicker id='timepicker' value={timeValue} disabled={selectedDate <= currentDate()} onChange={handleTimeChange} />
-          <input 
-            id='event' 
-            type='text' 
+          <input
+            id='event'
+            type='text'
             className='eventInput'
-            placeholder='Event' 
-            value={inputValue} 
-            onChange={handleInputChange} 
+            placeholder='Event'
+            value={inputValue}
+            onChange={handleInputChange}
             disabled={selectedDate <= currentDate()}
             autoComplete="off"
           />
-          <Button className='createEvent' disabled={selectedDate <= currentDate() } onClick={handleAddField}> Create Event </Button>
+          <Button className='createEvent' disabled={selectedDate <= currentDate()} onClick={handleAddField}> Create Event </Button>
         </div>
         <div className='scrollable-event-div'>
           {Array.isArray(events) && events.sort((a, b) => moment(a.time).valueOf() - moment(b.time).valueOf())

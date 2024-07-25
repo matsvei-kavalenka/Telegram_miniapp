@@ -9,7 +9,7 @@ import Button from '../../Button/Button';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS, { AES } from 'crypto-js';
 
-function CalendarPage({userId, onNavigationChange}) {
+function CalendarPage({ userId, onNavigationChange }) {
   const secretKey = process.env.REACT_APP_SECRET_KEY;
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [todosCalendar, setTodosCalendar] = useState([]);

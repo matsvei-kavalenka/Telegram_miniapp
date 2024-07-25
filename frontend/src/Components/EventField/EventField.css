@@ -4,15 +4,15 @@
     margin-bottom: 10px;
     width: 100%;
 }
-  
-input[name="eventField"]  {
+
+input[name="eventField"] {
     margin-left: 15px;
     border-radius: 5px;
     margin-top: 5px;
     text-align: left;
     padding-left: 5px;
     width: calc(100% - 200px);
-    height: 26px;   
+    height: 26px;
     border-width: 1px;
     border: 1.5px solid var(--tg-theme-text-color);
     border-radius: 5px;
@@ -20,8 +20,3 @@ input[name="eventField"]  {
     background-color: var(--tg-theme-bg-color);
     color: var(--tg-theme-text-color);
 }
-
-
-
-
-  

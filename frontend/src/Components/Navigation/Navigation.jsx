@@ -20,18 +20,20 @@ function Navigation({ passedValue, onNavigationChange }) {
 
   return (
     <div className='navigation'>
-      <Box sx={{ position: 'fixed', bottom: 5, zIndex: 1000, width: '95%', left: '50%', transform: 'translateX(-50%)'}}>
+      <Box sx={{ position: 'fixed', bottom: 5, zIndex: 1000, width: '95%', left: '50%', transform: 'translateX(-50%)' }}>
         <BottomNavigation
           showLabels
           value={value}
           onChange={handleChange}
-          sx={{ backgroundColor: 'var(--tg-theme-secondary-bg-color)', borderRadius: 5, '& .MuiBottomNavigationAction-label': {
-            fontSize: 14,
-          },}}
+          sx={{
+            backgroundColor: 'var(--tg-theme-secondary-bg-color)', borderRadius: 5, '& .MuiBottomNavigationAction-label': {
+              fontSize: 14,
+            },
+          }}
         >
-          <BottomNavigationAction label="ToDo" value="" sx={{color:'var(--tg-theme-text-color)', fontWeight: 'bold',}}/>
-          <BottomNavigationAction label="Events" value="events" sx={{color:'var(--tg-theme-text-color)', fontWeight: 'bold',}}/>
-          <BottomNavigationAction label="Calendar" value="calendar" sx={{color:'var(--tg-theme-text-color)', fontWeight: 'bold', fontSize: 20}} />
+          <BottomNavigationAction label="ToDo" value="" sx={{ color: 'var(--tg-theme-text-color)', fontWeight: 'bold', }} />
+          <BottomNavigationAction label="Events" value="events" sx={{ color: 'var(--tg-theme-text-color)', fontWeight: 'bold', }} />
+          <BottomNavigationAction label="Calendar" value="calendar" sx={{ color: 'var(--tg-theme-text-color)', fontWeight: 'bold', fontSize: 20 }} />
         </BottomNavigation>
       </Box>
     </div>

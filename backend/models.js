@@ -12,7 +12,7 @@ const eventSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
-    telegramId: { type: String, required: true, unique: true },
+  telegramId: { type: String, required: true, unique: true },
 });
 
 const notificationSchema = new mongoose.Schema({

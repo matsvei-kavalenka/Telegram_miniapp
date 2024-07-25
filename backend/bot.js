@@ -230,16 +230,20 @@ bot.on('callback_query', async (callbackQuery) => {
         bot.sendMessage(chatId, 'Choose the number of days:', markupDays);
         break;
       case 'show_3':
-        responseMessage = await handleDateRange(chatId, 3);
+        responseMessage = await handleDateRange(chatId, 3, userStates[chatId].step);
+        delete userStates[chatId];
         break;
       case 'show_5':
-        responseMessage = await handleDateRange(chatId, 5);
+        responseMessage = await handleDateRange(chatId, 5, userStates[chatId].step);
+        delete userStates[chatId];
         break;
       case 'show_7':
-        responseMessage = await handleDateRange(chatId, 7);
+        responseMessage = await handleDateRange(chatId, 7, userStates[chatId].step);
+        delete userStates[chatId];
         break;
       case 'show_10':
-        responseMessage = await handleDateRange(chatId, 10);
+        responseMessage = await handleDateRange(chatId, 10, userStates[chatId].step);
+        delete userStates[chatId];
         break;
       default:
         responseMessage = 'Unknown action!';

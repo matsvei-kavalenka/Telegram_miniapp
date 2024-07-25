@@ -21,8 +21,8 @@ function Todo({ userId, onNavigationChange }) {
   const isToday = (date) => {
     const today = new Date();
     return date.getDate() === today.getDate() &&
-           date.getMonth() === today.getMonth() &&
-           date.getFullYear() === today.getFullYear();
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear();
   };
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function Todo({ userId, onNavigationChange }) {
     retrieveTodos(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, data]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,11 +54,11 @@ function Todo({ userId, onNavigationChange }) {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
-  
+
   useEffect(() => {
     const formattedDate = formatDate(selectedDate);
     const currentDate = formatDate(new Date());
-  
+
     if (formattedDate === currentDate) {
       setBtnStateDisabled(true);
     } else {
@@ -74,7 +74,7 @@ function Todo({ userId, onNavigationChange }) {
     const decryptedData = AES.decrypt(encryptedData, secretKey).toString(CryptoJS.enc.Utf8);
     return JSON.parse(decryptedData);
   };
-  
+
   const handleKeyDown = (event, id) => {
     if (event.key === 'Enter') {
       handleOnSubmit(todos, selectedDate);
@@ -137,16 +137,16 @@ function Todo({ userId, onNavigationChange }) {
 
   const handleOnSubmit = async (todos, date) => {
     const formattedDate = formatDate(date);
-    if (todos.length === 0){
+    if (todos.length === 0) {
       return;
     }
     const filteredTodos = todos.filter(x => x.text.length !== 0);
     const encryptedTodos = encryptData(filteredTodos);
-    
+
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}`, {
         method: 'POST',
-        body: JSON.stringify({  userId, formattedDate, encryptedTodos }),
+        body: JSON.stringify({ userId, formattedDate, encryptedTodos }),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -172,7 +172,7 @@ function Todo({ userId, onNavigationChange }) {
       const decryptedData = decryptData(foundData.todos);
       setTodos(decryptedData);
     }
-    else{
+    else {
       setTodos([]);
     }
   };
@@ -180,7 +180,7 @@ function Todo({ userId, onNavigationChange }) {
   const retrievePendingTodos = (data) => {
     const newDate = new Date();
     newDate.setDate(newDate.getDate() - 1);
-    
+
     const formattedDate = formatDateForMongo(newDate);
     const foundData = data.find((block) => block.date === formattedDate);
     if (foundData) {
@@ -209,7 +209,7 @@ function Todo({ userId, onNavigationChange }) {
       setTodos([{ id: 0, text: '', checked: false }]);
       return;
     }
-    const inputElement = document.getElementById(`text-${todos.length-1}`);
+    const inputElement = document.getElementById(`text-${todos.length - 1}`);
     console.log(inputElement.value.trim());
     if (inputElement.value.trim() !== '') {
       setTodos(prevTodos => {
@@ -224,7 +224,7 @@ function Todo({ userId, onNavigationChange }) {
       });
     }
 
-    
+
   };
 
   const handleDelete = (id) => {
@@ -256,7 +256,7 @@ function Todo({ userId, onNavigationChange }) {
       />
       <div className='main-div'>
         <div className='scrollable-div'>
-        
+
           <OutsideClicker onOutsideClick={() => handleOnSubmit(todos, selectedDate)}>
             {pendingTodos.length !== 0 && isToday(selectedDate) && (
               <>
@@ -277,8 +277,8 @@ function Todo({ userId, onNavigationChange }) {
               </>
             )}
 
-            
-            {todos.sort((a, b) => (a.checked === b.checked)? 0 : a.checked? 1 : -1).map((todo, index) => (
+
+            {todos.sort((a, b) => (a.checked === b.checked) ? 0 : a.checked ? 1 : -1).map((todo, index) => (
               <TodoField
                 id={todo.id}
                 key={index}
@@ -291,11 +291,11 @@ function Todo({ userId, onNavigationChange }) {
               />
             ))}
           </OutsideClicker>
-          
+
         </div>
         <div className='div-sticky'>
           <Button className='plus' onClick={AddOnBtnClick}>
-            <img src={plus} alt= 'plus'/>
+            <img src={plus} alt='plus' />
           </Button>
         </div>
       </div>

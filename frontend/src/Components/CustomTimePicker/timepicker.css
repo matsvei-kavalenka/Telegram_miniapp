@@ -1,11 +1,9 @@
-.rc-time-picker{
-    color: var(--tg-theme-text-color)!important;
+.rc-time-picker {
+    color: var(--tg-theme-text-color) !important;
 }
 
-
-
 .rc-time-picker-input {
-    border: 1px solid  var(--tg-theme-text-color)!important;
+    border: 1px solid var(--tg-theme-text-color) !important;
     background-color: #5da7e4 !important;
     color: var(--tg-theme-text-color) !important;
     margin-left: 5px !important;
@@ -16,34 +14,33 @@
     height: 25px !important;
 }
 
-.rc-time-picker-input:disabled{
+.rc-time-picker-input:disabled {
     background-color: #ccc !important;
     color: var(--tg-theme-text-color) !important;
 
 }
 
 .rc-time-picker-panel-inner {
-    background-color: #5da7e4!important;
+    background-color: #5da7e4 !important;
     color: var(--tg-theme-text-color);
 }
 
 .rc-time-picker-panel-select li:hover {
     background: #5da7e4 !important;
-    color: var(--tg-theme-bg-color)!important;
-  }
+    color: var(--tg-theme-bg-color) !important;
+}
 
 li.rc-time-picker-panel-select-option-selected {
     background: #5da7e4 !important;
-    color: var(--tg-theme-bg-color)!important;
+    color: var(--tg-theme-bg-color) !important;
     font-weight: bold;
     font-size: 13px !important;
 }
 
 .rc-time-picker-panel-input {
-    background-color: #5da7e4!important;
+    background-color: #5da7e4 !important;
     color: var(--tg-theme-text-color);
     font-weight: bold;
     text-align: center;
-    font-size: 14px!important;
+    font-size: 14px !important;
 }
-

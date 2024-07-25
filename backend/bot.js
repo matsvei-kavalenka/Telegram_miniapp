@@ -28,14 +28,14 @@ bot.onText(/\/start/, async (msg) => {
 
   try {
     if (await User.findOne({ telegramId: chatId.toString() })) {
-      bot.sendMessage(chatId, 'Welcome!\n\nYou can use the following commands:\n/plans_today - to see your plans for today\n/plans_date - to see your plans for a specific date\n/plans_range - to see your plans for a range of days\n\n');
+      bot.sendMessage(chatId, 'You can use the following commands:\n/plans_today - to see your plans for today\n/plans_date - to see your plans for a specific date\n/plans_range - to see your plans for a range of days\n/edit_notification_settings - changes settings of daily notification\n');
       return;
     }
     const user = new User({ telegramId: chatId.toString() });
     const notification = new Notification({ telegramId: chatId.toString(), time: '21:00', enabled: 'true' });
     await user.save();
     await notification.save();
-    bot.sendMessage(chatId, 'Welcome!\n\nYou can use the following commands:\n\n/plans_today - to see your plans for today\n/plans_date - to see your plans for a specific date\n/plans_range - to see your plans for a range of days\n\n');
+    bot.sendMessage(chatId, 'Welcome!\n\nYou can use the following commands:\n\n/plans_today - to see your plans for today\n/plans_date - to see your plans for a specific date\n/plans_range - to see your plans for a range of days\n/edit_notification_settings - changes settings of daily notification\n');
   } catch (err) {
     bot.sendMessage(chatId, 'An error occurred while saving your Telegram ID.');
     console.error(err);
@@ -80,7 +80,7 @@ bot.onText(/\/plans_range/, async (msg) => {
   try {
     await User.findOne({ telegramId: chatId.toString() });
 
-    bot.sendMessage(chatId, 'Would you like to print past or future plans?:' + '\n\n', markupRange);
+    bot.sendMessage(chatId, 'Would you like to print past or future plans?' + '\n\n', markupRange);
 
   } catch (err) {
     bot.sendMessage(chatId, 'An error occurred while fetching your plans.');
@@ -129,13 +129,20 @@ bot.on('message', async (msg) => {
       if (!todos && !events) {
         responseMessage = 'No plans for today';
       }
+      else if (todos && !events) {
+        responseMessage = `${date}__*To-Do's*__\n${todos}\n\n\n__*Events*__\nYou don't have any events for this day`;
+      }
+      else if (!todos && events){
+        responseMessage = `${date}__*To-Do's*__\nYou don't have any to-do's for this day\n\n\n__*Events*__\n${events}`;
+      }
       else {
-        responseMessage = `${todos}\n\n\n${events}`;
+        responseMessage = `${date}__*To-Do's*__\n${todos}\n\n\n__*Events*__\n${events}`;
       }
 
       bot.sendMessage(chatId, escapeMarkdown(responseMessage), { parse_mode: 'MarkdownV2' });
       delete userStates[chatId];
     }
+
     else if (state === 'notification_time') {
       const time = msg.text;
       const notificationTime = await Notification.findOne({ telegramId: chatId.toString() });
@@ -195,6 +202,7 @@ bot.on('callback_query', async (callbackQuery) => {
           responseMessage = 'No plans for today';
           break;
         }
+        responseMessage = `__*Today's To-Do's*__:\n${responseMessage}`;
         break;
       case 'show_daily_events':
         responseMessage = await getEvents(chatId, today);
@@ -202,6 +210,7 @@ bot.on('callback_query', async (callbackQuery) => {
           responseMessage = 'No plans for today';
           break;
         }
+        responseMessage = `__*Today's Events*__:\n${responseMessage}`;
         break;
       case 'show_daily_all':
         const todos = await getTodos(chatId, today)
@@ -211,14 +220,14 @@ bot.on('callback_query', async (callbackQuery) => {
           break;
         }
         else if (!todos && events) {
-          responseMessage = `${events}`;
+          responseMessage = `__*Today's Events*__:\n${events}`;
           break;
         }
         else if (todos && !events) {
-          responseMessage = `__*Today's To-do*__:\n${todos}\n\n\n${events}`;
+          responseMessage = `__*Today's To-do*__:\n${todos}`;
           break;
         }
-        responseMessage = `${todos}\n\n\n${events}`;
+        responseMessage = `__*Today's To-Do's*__:\n${todos}\n\n__*Today's Events*__:\n${events}`;
 
         break;
       case 'show_past':

@@ -13,7 +13,6 @@ const mongoFormatDate = (date) => {
 
 const handleDateRange = async (chatId, days, step) => {
     const today = moment().toDate();
-    let startDate, endDate;
 
     if (step === 'show_past') {
         startDate = moment(today).subtract(days, 'days').toDate();
@@ -27,7 +26,17 @@ const handleDateRange = async (chatId, days, step) => {
 
     const todos = await getTodos(chatId, mongoFormatDate(startDate), mongoFormatDate(endDate));
     const events = await getEvents(chatId, mongoFormatDate(startDate), mongoFormatDate(endDate));
-    return `${todos || ''}\n\n\n${events || ''}`;
+    if (!todos && !events) {
+        return 'No plans for this day';
+    }
+    else if (!todos && events) {
+        return `__*Events*__\n${events}`;
+    }
+    else if (todos && !events) {
+        return `__*To-Do's*__\n${todos}`;
+    }
+
+    return `}__*To-Do's*__\n${todos}\n\n\n__*Events*__\n${events}`;
 };
 
 const getEvents = async (chatId, date1, date2) => {
@@ -51,14 +60,14 @@ const getEvents = async (chatId, date1, date2) => {
         }).join('\n');
 
 
-        return `__*Today's events*__:\n${formattedEvents}`;
+        return formattedEvents;
     }
     else {
         const data = await Event.find({ userId: chatId.toString(), date: { $gte: date1, $lte: date2 } });
         if (data.length === 0) {
             return '*You don\'t have any Events for this day*';
         }
-        const newData = data.map(day => {
+        const events = data.map(day => {
             const encryptedData = decryptData(day.events);
             const formattedEvents = encryptedData.map(event => {
                 const eventTime = moment(event.time).format('HH:mm');
@@ -66,7 +75,7 @@ const getEvents = async (chatId, date1, date2) => {
             }).join('\n');
             return `*➤ ${day.date}*\n${formattedEvents}\n`;
         }).join('\n').trim();
-        return `__*Today's events*__:\n${newData}`;
+        return events;
     }
 
 };
@@ -92,7 +101,7 @@ const getTodos = async (chatId, date1, date2) => {
             return `○  ${todo.text}`;
         }).join('\n');
 
-        return `__*Today's To-do*__:\n${formattedTodos}`;
+        return formattedTodos;
 
     }
     else {
@@ -113,7 +122,7 @@ const getTodos = async (chatId, date1, date2) => {
         }).join('\n').trim();
 
 
-        return `__*Today's To-Do's*__:\n${todos}`;
+        return todos;
     }
 };
 

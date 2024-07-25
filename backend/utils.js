@@ -36,7 +36,7 @@ const handleDateRange = async (chatId, days, step) => {
         return `__*To-Do's*__\n${todos}`;
     }
 
-    return `}__*To-Do's*__\n${todos}\n\n\n__*Events*__\n${events}`;
+    return `__*To-Do's*__\n${todos}\n\n\n__*Events*__\n${events}`;
 };
 
 const getEvents = async (chatId, date1, date2) => {
@@ -150,7 +150,6 @@ const setupNotification = async () => {
         notifications.map(notification => {
             const [HOURS, MINUTES] = notification.time.split(':');
             schedule.scheduleJob(`${MINUTES} ${HOURS} * * *`, async () => {
-                console.log(`Scheduled job running at ${HOURS}:${MINUTES}`);
                 const users = await User.find({});
                 for (const user of users) {
                     const chatId = user.telegramId;

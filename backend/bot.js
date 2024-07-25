@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { Todo, Event, User, Notification } = require('./models');
 const { markupDays, markupDaily, markupRange, markupNotificationSettings } = require('./markup');
 const { mongoFormatDate, handleDateRange, getEvents, getTodos, escapeMarkdown, setupNotification } = require('./utils');
+const { query } = require('express');
 require('dotenv').config();
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -96,7 +97,6 @@ bot.onText(/\/edit_notification_settings/, async (msg) => {
   try {
     const notification = await Notification.findOne({ telegramId: chatId.toString() });
     let text = '';
-    console.log(notification.enabled);
 
     if (notification.enabled) {
       text = 'Turn off';
@@ -130,13 +130,13 @@ bot.on('message', async (msg) => {
         responseMessage = 'No plans for today';
       }
       else if (todos && !events) {
-        responseMessage = `${date}__*To-Do's*__\n${todos}\n\n\n__*Events*__\nYou don't have any events for this day`;
+        responseMessage = `*${date}*\n\n__*To-Do's*__\n${todos}\n\n\n__*Events*__\nYou don't have any events for this day`;
       }
       else if (!todos && events){
-        responseMessage = `${date}__*To-Do's*__\nYou don't have any to-do's for this day\n\n\n__*Events*__\n${events}`;
+        responseMessage = `*${date}*\n\n__*To-Do's*__\nYou don't have any to-do's for this day\n\n\n__*Events*__\n${events}`;
       }
       else {
-        responseMessage = `${date}__*To-Do's*__\n${todos}\n\n\n__*Events*__\n${events}`;
+        responseMessage = `*${date}*\n\n__*To-Do's*__\n${todos}\n\n\n__*Events*__\n${events}`;
       }
 
       bot.sendMessage(chatId, escapeMarkdown(responseMessage), { parse_mode: 'MarkdownV2' });
@@ -162,6 +162,7 @@ bot.on('message', async (msg) => {
 
 bot.on('callback_query', async (callbackQuery) => {
   const chatId = callbackQuery.message.chat.id;
+  const messageId = callbackQuery.message.message_id;
   const action = callbackQuery.data;
   const today = mongoFormatDate(new Date());
 
@@ -192,8 +193,6 @@ bot.on('callback_query', async (callbackQuery) => {
         } else if (notificationEnabled.enabled) {
           bot.sendMessage(chatId, `Notification turned on`);
         }
-
-
 
         break;
       case 'show_daily_todo':
@@ -254,6 +253,13 @@ bot.on('callback_query', async (callbackQuery) => {
       default:
         responseMessage = 'Unknown action!';
     }
+    bot.deleteMessage(chatId, messageId)
+        .then(() => {
+            console.log('Message deleted');
+        })
+        .catch((err) => {
+            console.error('Failed to delete message:', err);
+        });
 
     bot.answerCallbackQuery(callbackQuery.id);
     if (responseMessage !== undefined) {

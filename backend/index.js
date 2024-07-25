@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
-const bot = require('./Bot/bot');
+const bot = require('./bot');
 const bodyParser = require('body-parser');
 const { Todo, Event } = require('./models');
 require('dotenv').config();
@@ -17,8 +17,8 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: FRONTEND_URL, 
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  origin: FRONTEND_URL,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 

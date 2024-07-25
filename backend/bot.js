@@ -3,9 +3,6 @@ const mongoose = require('mongoose');
 const { Todo, Event, User, Notification } = require('./models');
 const { markupDays, markupDaily, markupRange, markupNotificationSettings } = require('./markup');
 const { mongoFormatDate, handleDateRange, getEvents, getTodos, escapeMarkdown, setupNotification } = require('./utils');
-const CryptoJS = require('crypto-js');
-const schedule = require('node-schedule');
-const moment = require('moment');
 require('dotenv').config();
 
 const token = process.env.TELEGRAM_BOT_TOKEN;

@@ -1,7 +1,7 @@
 const moment = require('moment');
 const CryptoJS = require('crypto-js');
 const { Todo, Event, User, Notification } = require('./models');
-const schedule = require('node-schedule');
+
 
 const mongoFormatDate = (date) => {
     if (!(date instanceof Date) || isNaN(date)) return '';
@@ -17,7 +17,7 @@ const handleDateRange = async (chatId, days, step) => {
     if (step === 'show_past') {
         startDate = moment(today).subtract(days, 'days').toDate();
         endDate = today;
-    } else if (userStates[chatId].step === 'show_future') {
+    } else if (step === 'show_future') {
         startDate = today;
         endDate = moment(today).add(days, 'days').toDate();
     } else {
@@ -43,13 +43,13 @@ const getEvents = async (chatId, date1, date2) => {
     if (date2 === undefined) {
         const data = await Event.find({ userId: chatId.toString(), date: date1 });
         if (data.length === 0) {
-            return '*You don\'t have any Events for today*';
+            return 'You don\'t have any Events for today';
         }
 
         const todayData = data.find(block => block.date === date1);
 
         if (!todayData) {
-            return '*You don\'t have any Events for today*';
+            return 'You don\'t have any Events for today';
         }
 
         const encryptedData = decryptData(todayData.events);
@@ -64,17 +64,32 @@ const getEvents = async (chatId, date1, date2) => {
     }
     else {
         const data = await Event.find({ userId: chatId.toString(), date: { $gte: date1, $lte: date2 } });
+
         if (data.length === 0) {
-            return '*You don\'t have any Events for this day*';
+            return 'You don\'t have any Events for these days';
         }
-        const events = data.map(day => {
-            const encryptedData = decryptData(day.events);
-            const formattedEvents = encryptedData.map(event => {
-                const eventTime = moment(event.time).format('HH:mm');
-                return `*${eventTime}* - ${event.text}`;
-            }).join('\n');
-            return `*➤ ${day.date}*\n${formattedEvents}\n`;
-        }).join('\n').trim();
+
+        let events = '';
+        const startDate = moment(date1, 'DD-MM-YYYY');
+        const endDate = moment(date2, 'DD-MM-YYYY');
+
+        for (let date = startDate.clone().add(1, 'days'); date <= endDate; date.add(1, 'days')) {
+            const formattedDate = date.format('DD-MM-YYYY');
+            const dayData = data.find(day => day.date === formattedDate);
+
+            if (!dayData) {
+                events += `*➤ ${date.format('DD-MM-YYYY')}*\nYou don\'t have any Events for this day\n\n`;
+            } else {
+                const encryptedData = decryptData(dayData.events);
+                const formattedEvents = encryptedData.map(event => {
+                    const eventTime = moment(event.time, 'HH:mm').format('HH:mm');
+                    return `*${eventTime}* - ${event.text}`;
+                }).join('\n');
+                events += `*➤ ${date.format('DD-MM-YYYY')}*\n${formattedEvents}\n\n`;
+            }
+        }
+
+        events = events.trim();
         return events;
     }
 
@@ -84,13 +99,13 @@ const getTodos = async (chatId, date1, date2) => {
     if (date2 === undefined) {
         const data = await Todo.find({ userId: chatId.toString(), date: date1 });
         if (data.length === 0) {
-            return '*You don\'t have any To-Do\'s for today*';
+            return 'You don\'t have any To-Do\'s for today';
         }
 
         const todayData = data.find(block => block.date === date1);
 
         if (!todayData) {
-            return '*You don\'t have any To-Do\'s for today*';
+            return 'You don\'t have any To-Do\'s for today';
         }
 
         const encryptedData = decryptData(todayData.todos);
@@ -107,20 +122,32 @@ const getTodos = async (chatId, date1, date2) => {
     else {
         const data = await Todo.find({ userId: chatId.toString(), date: { $gte: date1, $lte: date2 } });
         if (data.length === 0) {
-            return '*You don\'t have any To-Do\'s for this day*';
+            return 'You don\'t have any To-Do\'s for these days';
         }
 
-        const todos = data.map(day => {
-            const encryptedData = decryptData(day.todos);
-            const formattedTodos = encryptedData.map((todo) => {
-                if (todo.checked) {
-                    return `●  ~${todo.text}~`;
-                }
-                return `○  ${todo.text}`;
-            }).join('\n');
-            return `*➤ ${day.date}*\n${formattedTodos}\n`;
-        }).join('\n').trim();
 
+        let todos = '';
+        const startDate = moment(date1, 'DD-MM-YYYY');
+        const endDate = moment(date2, 'DD-MM-YYYY');
+        for (let date = startDate.clone().add(1, 'days'); date <= endDate; date.add(1, 'days')) {
+            const formattedDate = date.format('DD-MM-YYYY');
+            const dayData = data.find(day => day.date === formattedDate);
+
+            if (!dayData) {
+                todos += `*➤ ${date.format('DD-MM-YYYY')}*\nYou don\'t have any To-Do\'s for this day\n\n`;
+            } else {
+                const encryptedData = decryptData(dayData.todos);
+                const formattedTodos = encryptedData.map((todo) => {
+                    if (todo.checked) {
+                        return `●  ~${todo.text}~`;
+                    }
+                    return `○  ${todo.text}`;
+                }).join('\n');
+                todos += `*➤ ${date.format('DD-MM-YYYY')}*\n${formattedTodos}\n\n`;
+            }
+        }
+
+        todos = todos.trim();
 
         return todos;
     }
@@ -140,33 +167,7 @@ const escapeMarkdown = (text) => {
     return escapedText;
 };
 
-const setupNotification = async () => {
-    try {
-        const notifications = await Notification.find({ enabled: 'true' });
-        if (!notifications) {
-            console.error('No notification found for the given telegramId');
-            return;
-        }
-        notifications.map(notification => {
-            const [HOURS, MINUTES] = notification.time.split(':');
-            schedule.scheduleJob(`${MINUTES} ${HOURS} * * *`, async () => {
-                const users = await User.find({});
-                for (const user of users) {
-                    const chatId = user.telegramId;
-                    const today = mongoFormatDate(new Date());
-                    const todos = await getTodos(chatId, today);
-                    const events = await getEvents(chatId, today);
 
-                    const responseMessage = `${todos}\n\n\n${events}`;
-                    bot.sendMessage(chatId, escapeMarkdown(responseMessage), { parse_mode: 'MarkdownV2' });
-                }
-            });
-        })
-
-    } catch (err) {
-        console.error('Error setting up scheduled job:', err);
-    }
-};
 
 module.exports = {
     mongoFormatDate,
@@ -174,6 +175,5 @@ module.exports = {
     getEvents,
     getTodos,
     decryptData,
-    escapeMarkdown,
-    setupNotification
+    escapeMarkdown
 };

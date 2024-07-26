@@ -2,8 +2,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
 const { Todo, Event, User, Notification } = require('./models');
 const { markupDays, markupDaily, markupRange, markupNotificationSettings } = require('./markup');
-const { mongoFormatDate, handleDateRange, getEvents, getTodos, escapeMarkdown, setupNotification } = require('./utils');
-const { query } = require('express');
+const { mongoFormatDate, handleDateRange, getEvents, getTodos, escapeMarkdown } = require('./utils');
+const schedule = require('node-schedule');
 require('dotenv').config();
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -15,7 +15,7 @@ mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
-  setupNotification();
+  setupNotifications();
   console.log('Connected to MongoDB');
 }).catch(err => {
   console.error('Error connecting to MongoDB', err);
@@ -26,7 +26,6 @@ const userStates = {};
 // --- /start command ---
 bot.onText(/\/start/, async (msg) => {
   const chatId = msg.chat.id;
-
   try {
     if (await User.findOne({ telegramId: chatId.toString() })) {
       bot.sendMessage(chatId, 'You can use the following commands:\n/plans_today - to see your plans for today\n/plans_date - to see your plans for a specific date\n/plans_range - to see your plans for a range of days\n/edit_notification_settings - changes settings of daily notification\n');
@@ -58,7 +57,7 @@ bot.onText(/\/plans_today/, async (msg) => {
   }
 });
 
-// --- /show_plans command ---
+// --- /plans_date command ---
 bot.onText(/\/plans_date/, async (msg) => {
   const chatId = msg.chat.id;
 
@@ -66,7 +65,7 @@ bot.onText(/\/plans_date/, async (msg) => {
     await User.findOne({ telegramId: chatId.toString() });
 
     userStates[chatId] = { step: 'exact_date' };
-    bot.sendMessage(chatId, 'Enter the date: \nEnter start date in format dd-mm-yyyy (e.g. 15-01-2024)' + '\n\n');
+    bot.sendMessage(chatId, 'Enter date in format dd-mm-yyyy (e.g. 15-01-2024)' + '\n\n');
 
   } catch (err) {
     bot.sendMessage(chatId, 'An error occurred while fetching your plans.');
@@ -124,6 +123,16 @@ bot.on('message', async (msg) => {
 
     if (state === 'exact_date') {
       const date = msg.text;
+      const datePattern = new RegExp(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/);
+
+      if (date.startsWith('/')) {
+        return;
+      }
+      else if (!datePattern.test(date)) {
+        bot.sendMessage(chatId, 'Invalid time format. Please enter date in format dd-mm-yyyy (e.g. 15-01-2024)');
+        return;
+      }
+
       const todos = await getTodos(chatId, date);
       const events = await getEvents(chatId, date);
       if (!todos && !events) {
@@ -132,7 +141,7 @@ bot.on('message', async (msg) => {
       else if (todos && !events) {
         responseMessage = `*${date}*\n\n__*To-Do's*__\n${todos}\n\n\n__*Events*__\nYou don't have any events for this day`;
       }
-      else if (!todos && events){
+      else if (!todos && events) {
         responseMessage = `*${date}*\n\n__*To-Do's*__\nYou don't have any to-do's for this day\n\n\n__*Events*__\n${events}`;
       }
       else {
@@ -153,8 +162,8 @@ bot.on('message', async (msg) => {
       }
       notificationTime.time = time;
       await notificationTime.save();
-      setupNotification();
-      bot.sendMessage(chatId, `Notification time was changed to ${time}`);
+      setupNotifications();
+      bot.sendMessage(chatId, `Daily notification time was changed to ${time}`);
       delete userStates[chatId];
     }
   }
@@ -186,12 +195,12 @@ bot.on('callback_query', async (callbackQuery) => {
 
         notificationEnabled.enabled = !notificationEnabled.enabled;
         notificationEnabled.save();
-        setupNotification();
+        setupNotifications();
 
         if (!notificationEnabled.enabled) {
-          bot.sendMessage(chatId, `Notification turned off`);
+          bot.sendMessage(chatId, `Daily notification turned off`);
         } else if (notificationEnabled.enabled) {
-          bot.sendMessage(chatId, `Notification turned on`);
+          bot.sendMessage(chatId, `Daily notification turned on. Notification time is ${notificationEnabled.time}`);
         }
 
         break;
@@ -253,13 +262,14 @@ bot.on('callback_query', async (callbackQuery) => {
       default:
         responseMessage = 'Unknown action!';
     }
+
     bot.deleteMessage(chatId, messageId)
-        .then(() => {
-            console.log('Message deleted');
-        })
-        .catch((err) => {
-            console.error('Failed to delete message:', err);
-        });
+      .then(() => {
+        console.log('Message deleted');
+      })
+      .catch((err) => {
+        console.error('Failed to delete message:', err);
+      });
 
     bot.answerCallbackQuery(callbackQuery.id);
     if (responseMessage !== undefined) {
@@ -272,6 +282,40 @@ bot.on('callback_query', async (callbackQuery) => {
     console.error(err);
   }
 });
+
+const setupNotifications = async () => {
+  try {
+    const notifications = await Notification.find({ enabled: 'true' });
+    if (!notifications) {
+      console.error('No notification found for the given telegramId');
+      return;
+    }
+    notifications.map(notification => {
+      const [HOURS, MINUTES] = notification.time.split(':');
+      schedule.scheduleJob(`${MINUTES} ${HOURS} * * *`, async () => {
+        const users = await User.find({});
+        for (const user of users) {
+          const chatId = user.telegramId;
+          const today = mongoFormatDate(new Date());
+          const todos = await getTodos(chatId, today);
+          const events = await getEvents(chatId, today);
+          console.log('Sending notification to:', chatId);
+          if (todos === 'You don\'t have any To-Do\'s for today' && events==='You don\'t have any Events for today') {
+            responseMessage = '*DAILY NOTIFICATION*\n\n\nNo plans for today';
+          }
+          else {
+            responseMessage = `*DAILY NOTIFICATION*\n\n\n${todos}\n\n\n${events}`;
+          }
+
+          bot.sendMessage(chatId, escapeMarkdown(responseMessage), { parse_mode: 'MarkdownV2' });
+        }
+      });
+    })
+
+  } catch (err) {
+    console.error('Error setting up scheduled job:', err);
+  }
+};
 
 
 module.exports = bot;
